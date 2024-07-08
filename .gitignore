@@ -41,6 +41,7 @@ dist/
 downloads/
 eggs/
 lib/
+!/src/entrypoint/frontend/lib
 lib64/
 parts/
 sdist/
