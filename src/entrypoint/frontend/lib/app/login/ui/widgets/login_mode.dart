@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/helpers/custom_size.dart';
 import 'custom_elevated_button.dart';
 import 'custom_text_form_field.dart';
+import '../dashboard.dart';
 
 class LoginMode extends StatelessWidget {
   const LoginMode({
@@ -46,6 +47,12 @@ class LoginMode extends StatelessWidget {
               text: 'Login',
               onPressed: () {
                 // TODO: add funcionality
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Dashboard(),
+                  ),
+                );
               },
             ),
           ],
