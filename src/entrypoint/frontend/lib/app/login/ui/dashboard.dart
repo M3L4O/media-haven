@@ -8,13 +8,54 @@ class Dashboard extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo,
-        title: Text(
+        title: const Text(
           'Dashboard',
-          style: TextStyle(
+            style: TextStyle(
             color: Colors.white,
           ),
         ),
         centerTitle: true,
+      ),
+      drawer: Drawer(
+        child: Column(
+          children: <Widget>[
+            Container(
+              color: const Color.fromRGBO(71, 86, 197, 1),
+              child: const Padding(
+                padding: EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage('path_to_image'),
+                        radius: 25,
+                      ),
+                      SizedBox(width: 10),
+                      Text( // Trocar a string 'nomeDeUsuario' pelo nome do usuário
+                        'nomeDeUsuario',
+                        style:
+                          TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                  ],
+                ),
+               ),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Configurações'),
+              onTap: () {
+                // Handle Configurações action
+              },
+            ),
+            Spacer(),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text('Sair'),
+              onTap: () {
+                // Handle Sair action
+              },
+            ),
+          ],
+        )
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
