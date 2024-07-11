@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b861537c-a6e6-430e-a057-f2f96d48d28b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/entrypoint/frontend/lib/app/login/ui/widgets/login_mode.dart" beforeDir="false" afterPath="$PROJECT_DIR$/src/entrypoint/frontend/lib/app/login/ui/widgets/login_mode.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entrypoint/frontend/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/src/entrypoint/frontend/pubspec.lock" afterDir="false" />
-    </list>
+    <list default="true" id="b861537c-a6e6-430e-a057-f2f96d48d28b" name="Changes" comment="changes to dashboard screen" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -81,6 +78,15 @@
       <option name="presentableId" value="Default" />
       <updated>1720705409630</updated>
     </task>
+    <task id="LOCAL-00001" summary="changes to dashboard screen">
+      <option name="closed" value="true" />
+      <created>1720717356766</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1720717356766</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -105,5 +111,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="changes to dashboard screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="changes to dashboard screen" />
   </component>
 </project>
