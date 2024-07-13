@@ -25,37 +25,39 @@ class CustomTextFormField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       onChanged: onChanged,
-      cursorColor: MHColors.purple,
+      cursorColor: MHColors.blue,
       obscureText: obscureText,
       decoration: InputDecoration(
+        fillColor: MHColors.lightGray,
+        filled: true,
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 12,
-          vertical: 14,
+          vertical: 18,
         ),
         hintText: hintText,
         label: Text(labelText),
-        suffixIcon: Icon(
+        prefixIcon: Icon(
           icon,
-          color: MHColors.purple,
+          color: MHColors.blue,
           size: 20,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: const BorderSide(
-            color: MHColors.purple,
+            color: MHColors.blue,
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(
-            color: MHColors.gray,
+            color: MHColors.lightGray,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(
-            color: MHColors.purple,
+            color: MHColors.blue,
           ),
         ),
       ),
