@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:frontend/app/login/ui/widgets/custom_elevated_button.dart';
+import 'package:frontend/app/login/ui/widgets/custom_button.dart';
 import 'package:frontend/app/login/ui/widgets/custom_text_form_field.dart';
 import 'package:frontend/core/helpers/custom_size.dart';
 
@@ -67,9 +67,9 @@ class RegisterMode extends StatelessWidget {
               controller: confirmPasswordController,
             ),
             32.h,
-            CustomElevatedButton(
+            CustomButton(
               text: 'Cadastre-se',
-              onPressed: () {
+              onTap: () {
                 // TODO: add funcionality
               },
             ),
