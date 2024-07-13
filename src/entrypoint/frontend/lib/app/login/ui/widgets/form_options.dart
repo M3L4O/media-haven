@@ -15,6 +15,8 @@ class FormOptions extends StatefulWidget {
     required this.passwordController,
     required this.nameController,
     required this.confirmPasswordController,
+    required this.onChangeLogin,
+    required this.onChangeRegister,
   });
 
   final bool loginMode;
@@ -22,6 +24,9 @@ class FormOptions extends StatefulWidget {
   final TextEditingController passwordController;
   final TextEditingController nameController;
   final TextEditingController confirmPasswordController;
+
+  final Function() onChangeLogin;
+  final Function() onChangeRegister;
 
   final Function() onTapLogin;
   final Function() onTapRegister;
@@ -58,7 +63,7 @@ class _FormOptionsState extends State<FormOptions> {
               child: Row(
                 children: [
                   InkWell(
-                    onTap: widget.onTapLogin,
+                    onTap: widget.onChangeLogin,
                     borderRadius: BorderRadius.circular(20),
                     child: Container(
                       width: 100,
@@ -83,7 +88,7 @@ class _FormOptionsState extends State<FormOptions> {
                     ),
                   ),
                   InkWell(
-                    onTap: widget.onTapRegister,
+                    onTap: widget.onChangeRegister,
                     borderRadius: BorderRadius.circular(20),
                     child: Container(
                       width: 100,
@@ -119,6 +124,7 @@ class _FormOptionsState extends State<FormOptions> {
                   ? LoginMode(
                       emailController: widget.emailController,
                       passwordController: widget.passwordController,
+                      onLogin: widget.onTapLogin,
                     )
                   : RegisterMode(
                       nameController: widget.nameController,
@@ -126,6 +132,7 @@ class _FormOptionsState extends State<FormOptions> {
                       passwordController: widget.passwordController,
                       confirmPasswordController:
                           widget.confirmPasswordController,
+                      onRegister: widget.onTapRegister,
                     ),
             ),
           ],

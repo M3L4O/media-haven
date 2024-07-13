@@ -2,6 +2,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/app/dashboard/ui/dashboard_page.dart';
 import 'package:frontend/app/login/ui/widgets/form_options.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,7 +18,10 @@ class _LoginPageState extends State<LoginPage> {
   late TextEditingController _passwordController;
   late TextEditingController _confirmPasswordController;
 
+  final formKey = GlobalKey<FormState>();
+
   bool loginMode = true;
+
   @override
   void initState() {
     _emailController = TextEditingController();
@@ -47,22 +51,49 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FormOptions(
-                      loginMode: loginMode,
-                      emailController: _emailController,
-                      passwordController: _passwordController,
-                      nameController: _nameController,
-                      confirmPasswordController: _confirmPasswordController,
-                      onTapLogin: () {
-                        setState(() {
-                          loginMode = true;
-                        });
-                      },
-                      onTapRegister: () {
-                        setState(() {
-                          loginMode = false;
-                        });
-                      },
+                    Form(
+                      key: formKey,
+                      child: FormOptions(
+                        loginMode: loginMode,
+                        emailController: _emailController,
+                        passwordController: _passwordController,
+                        nameController: _nameController,
+                        confirmPasswordController: _confirmPasswordController,
+                        onChangeLogin: () {
+                          setState(() {
+                            loginMode = true;
+                          });
+                          _clearForm();
+                        },
+                        onChangeRegister: () {
+                          setState(() {
+                            loginMode = false;
+                          });
+                          _clearForm();
+                        },
+                        onTapLogin: () {
+                          final isValidate = formKey.currentState!.validate();
+                          if (isValidate) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Dashboard(),
+                              ),
+                            );
+                          }
+                        },
+                        onTapRegister: () {
+                          final isValidate = formKey.currentState!.validate();
+                          if (isValidate) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Dashboard(),
+                              ),
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -72,5 +103,13 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
+  }
+
+  void _clearForm() {
+    _nameController.clear();
+    _emailController.clear();
+    _passwordController.clear();
+    _confirmPasswordController.clear();
+    formKey.currentState?.reset();
   }
 }
