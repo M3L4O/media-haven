@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'app/login/ui/login_page.dart';
+import 'core/injection_container.dart';
 import 'core/theme/theme.dart';
 
 void main() {
+  initGlobalContainer();
+
   runApp(const MyApp());
 }
 
