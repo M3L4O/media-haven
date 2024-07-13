@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/core/theme/theme.dart';
+
 import 'app/login/ui/login_page.dart';
+import 'core/theme/theme.dart';
 
 void main() {
   runApp(const MyApp());
