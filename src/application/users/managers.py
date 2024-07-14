@@ -6,7 +6,7 @@ from users.models import CustomUser
 
 class CustomUserManager(BaseUserManager):
     @staticmethod
-    def create_user(email, password, **extra_fields):
+    def create_user(username, email, password, **extra_fields):
         if not email:
             raise ValueError(_("The Email must be set"))
 
@@ -15,7 +15,7 @@ class CustomUserManager(BaseUserManager):
         if CustomUser.objects.filter(email=email).exists():
             raise ValidationError(_("A user with this email already exists"))
 
-        user = CustomUser(email=email, **extra_fields)
+        user = CustomUser(username=username,email=email, **extra_fields)
         user.set_password(password)
         user.save()
         return user
