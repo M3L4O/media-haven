@@ -12,7 +12,7 @@ class SessionManager(BaseUserManager):
     @staticmethod
     def create_session(email, password):
         user = CustomUserManager.load_user(email, password)
-        
+
         session = Session(user=user, token=str(uuid4()), creation_date=time())
         session.save()
 
@@ -26,3 +26,11 @@ class SessionManager(BaseUserManager):
             raise ValueError(_("Invalid token."))
 
         return session
+
+    @staticmethod
+    def delete_session(token):
+        try:
+            session = Session.objects.get(token=token)
+            session.delete()
+        except ObjectDoesNotExist:
+            raise ValueError(_("Invalid Token."))

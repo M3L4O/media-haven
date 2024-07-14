@@ -25,6 +25,17 @@ def login(request):
         return HttpResponse(status=401)
 
 
+def logout(request):
+    body = json.loads(request.body.decode("utf-8"))
+    token = body["access_token"]
+
+    try:
+        SessionManager.delete_session(token=token)
+        return HttpResponse(status=200)
+    except ValueError:
+        return HttpResponse(status=404)
+
+
 def sign_up(request):
     body = json.loads(request.body.decode("utf-8"))
     email = body["email"]
