@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart';
 
 abstract class IHttpClient {
@@ -11,13 +13,14 @@ abstract class IHttpClient {
 
 class HttpClient implements IHttpClient {
   final client = Client();
+  final baseUrl = 'http://3.234.69.108:8000';
 
   @override
   Future<Response> delete(
     String url,
   ) {
     return client.delete(
-      Uri.parse(url),
+      Uri.parse(baseUrl + url),
     );
   }
 
@@ -26,7 +29,7 @@ class HttpClient implements IHttpClient {
     String url,
   ) {
     return client.get(
-      Uri.parse(url),
+      Uri.parse(baseUrl + url),
     );
   }
 
@@ -36,8 +39,9 @@ class HttpClient implements IHttpClient {
     Map<String, dynamic> body,
   ) async {
     return client.post(
-      Uri.parse(url),
-      body: body,
+      Uri.parse(baseUrl + url),
+      headers: getHeaders(),
+      body: jsonEncode(body),
     );
   }
 
@@ -47,7 +51,7 @@ class HttpClient implements IHttpClient {
     Map<String, dynamic> body,
   ) {
     return client.put(
-      Uri.parse(url),
+      Uri.parse(baseUrl + url),
       body: body,
     );
   }
@@ -57,7 +61,6 @@ class HttpClient implements IHttpClient {
     return {
       "Content-Type": "application/json",
       "Accept": "application/json",
-      // "KeyAPI": "${Env.to?.keyAPI}",
     };
   }
 }
