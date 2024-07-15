@@ -6,7 +6,12 @@ import '../../../../core/theme/mh_colors.dart';
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({
     super.key,
+    required this.username,
+    required this.onTapLogout,
   });
+
+  final String username;
+  final Function() onTapLogout;
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +52,9 @@ class CustomDrawer extends StatelessWidget {
                     },
                   ),
                   const SizedBox(width: 10),
-                  const Text(
-                    // TODO: Trocar a string 'usuario' pelo nome do usuário
-                    'Usuário',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  Text(
+                    username,
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ],
               ),
@@ -67,9 +71,7 @@ class CustomDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.exit_to_app),
             title: const Text('Sair'),
-            onTap: () {
-              Navigator.of(context).pushReplacementNamed('/login');
-            },
+            onTap: onTapLogout,
           ),
         ],
       ),
