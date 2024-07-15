@@ -13,7 +13,7 @@ abstract class IHttpClient {
 
 class HttpClient implements IHttpClient {
   final client = Client();
-  final baseUrl = 'http://3.234.69.108:8000';
+  final baseUrl = 'http://44.220.15.10:8000';
 
   @override
   Future<Response> delete(
