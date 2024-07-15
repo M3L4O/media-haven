@@ -1,7 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:frontend/app/login/ui/widgets/form_options.dart';
-import 'package:frontend/app/login/ui/widgets/information.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,7 +17,9 @@ class _LoginPageState extends State<LoginPage> {
   late TextEditingController _passwordController;
   late TextEditingController _confirmPasswordController;
 
-  final List<bool> _formMode = [true, false];
+  final formKey = GlobalKey<FormState>();
+
+  bool loginMode = true;
 
   @override
   void initState() {
@@ -30,53 +33,82 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Flexible(
-                    child: Information(
-                      logoUrl: 'assets/images/logo.png',
-                      title: 'Bem vindo',
-                      description:
-                          'Media Heaven é a solução definitiva para organizar, reproduzir e desfrutar de sua biblioteca de mídia em um só lugar. Com uma interface intuitiva e recursos poderosos, este gerenciador multimídia oferece uma experiência sem igual.',
-                    ),
+      body: CustomScrollView(
+        slivers: [
+          SliverFillRemaining(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(
+                    'assets/images/login_bg.jpg',
                   ),
-                  Flexible(
-                    flex: 2,
-                    child: FormOptions(
-                      formMode: _formMode,
-                      emailController: _emailController,
-                      passwordController: _passwordController,
-                      nameController: _nameController,
-                      confirmPasswordController: _confirmPasswordController,
-                      onTapLogin: () {
-                        setState(() {
-                          _formMode[0] = true;
-                          _formMode[1] = false;
-                        });
-                      },
-                      onTapRegister: () {
-                        setState(() {
-                          _formMode[0] = false;
-                          _formMode[1] = true;
-                        });
-                      },
-                    ),
-                  ),
-                ],
+                  fit: BoxFit.cover,
+                ),
               ),
-            ],
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Form(
+                      key: formKey,
+                      child: FormOptions(
+                        loginMode: loginMode,
+                        emailController: _emailController,
+                        passwordController: _passwordController,
+                        nameController: _nameController,
+                        confirmPasswordController: _confirmPasswordController,
+                        onChangeLogin: () {
+                          setState(() {
+                            loginMode = true;
+                          });
+                          _clearForm();
+                        },
+                        onChangeRegister: () {
+                          setState(() {
+                            loginMode = false;
+                          });
+                          _clearForm();
+                        },
+                        onTapLogin: () {
+                          final isValidate = formKey.currentState!.validate();
+                          if (isValidate) {
+                            _clearForm();
+                            Navigator.pushReplacementNamed(
+                              context,
+                              '/dashboard',
+                            );
+                          }
+                        },
+                        onTapRegister: () {
+                          final isValidate = formKey.currentState!.validate();
+                          if (isValidate) {
+                            _clearForm();
+                            Navigator.pushReplacementNamed(
+                              context,
+                              '/dashboard',
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
+  }
+
+  void _clearForm() {
+    _nameController.clear();
+    _emailController.clear();
+    _passwordController.clear();
+    _confirmPasswordController.clear();
+    formKey.currentState?.reset();
   }
 }
