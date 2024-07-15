@@ -2,7 +2,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/app/dashboard/ui/dashboard_page.dart';
 import 'package:frontend/app/login/ui/widgets/form_options.dart';
 
 class LoginPage extends StatefulWidget {
@@ -42,7 +41,9 @@ class _LoginPageState extends State<LoginPage> {
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/login_bg.jpg'),
+                  image: AssetImage(
+                    'assets/images/login_bg.jpg',
+                  ),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -74,22 +75,20 @@ class _LoginPageState extends State<LoginPage> {
                         onTapLogin: () {
                           final isValidate = formKey.currentState!.validate();
                           if (isValidate) {
-                            Navigator.push(
+                            _clearForm();
+                            Navigator.pushReplacementNamed(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => const Dashboard(),
-                              ),
+                              '/dashboard',
                             );
                           }
                         },
                         onTapRegister: () {
                           final isValidate = formKey.currentState!.validate();
                           if (isValidate) {
-                            Navigator.push(
+                            _clearForm();
+                            Navigator.pushReplacementNamed(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => const Dashboard(),
-                              ),
+                              '/dashboard',
                             );
                           }
                         },

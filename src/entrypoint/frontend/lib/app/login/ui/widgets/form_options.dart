@@ -50,9 +50,28 @@ class _FormOptionsState extends State<FormOptions> {
           children: [
             Image.asset(
               'assets/images/logo.png',
-              width: 200,
+              width: 150,
             ),
-            64.h,
+            24.h,
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text: widget.loginMode ? 'Olá, ' : 'Seja bem vindo!',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: MHColors.darkGray,
+                      fontWeight: FontWeight.bold,
+                    ),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: widget.loginMode
+                        ? 'novamente!'
+                        : '\nComece a guardar suas mídias com o Media Haven.',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ],
+              ),
+            ),
+            32.h,
             Container(
               width: 200,
               height: 40,

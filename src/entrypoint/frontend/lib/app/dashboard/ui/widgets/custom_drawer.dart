@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/core/theme/mh_colors.dart';
+
+import '../../../../core/theme/mh_colors.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({
@@ -67,9 +68,7 @@ class CustomDrawer extends StatelessWidget {
             leading: const Icon(Icons.exit_to_app),
             title: const Text('Sair'),
             onTap: () {
-              // TODO: Handle Sair action
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacementNamed('/login');
             },
           ),
         ],
