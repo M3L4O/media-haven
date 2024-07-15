@@ -31,4 +31,13 @@ ThemeData theme = ThemeData(
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: MHColors.blue,
   ),
+  progressIndicatorTheme: const ProgressIndicatorThemeData(
+    color: MHColors.blue,
+  ),
+  snackBarTheme: const SnackBarThemeData(
+    backgroundColor: MHColors.blue,
+    contentTextStyle: TextStyle(
+      color: MHColors.white,
+    ),
+  ),
 );

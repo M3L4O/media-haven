@@ -9,20 +9,23 @@ class MessageComponent extends StatelessWidget {
     super.key,
     required this.animationPath,
     required this.message,
+    this.size = 300,
   });
 
   final String animationPath;
   final String message;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,        children: [
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
           Lottie.asset(
             animationPath,
-            width: 300,
+            width: size,
           ),
           24.h,
           Padding(
