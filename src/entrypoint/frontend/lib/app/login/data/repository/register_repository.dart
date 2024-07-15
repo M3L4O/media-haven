@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import '../datasource/register_datasource.dart';
 import '../models/params/user_register_params.dart';
-import '../models/user_model.dart';
+import '../models/token_model.dart';
 
 abstract class IRegisterRepository {
-  Future<User> register({required UserRegisterParams user});
+  Future<TokenModel> register({required UserRegisterParams user});
 }
 
 class RegisterRepository implements IRegisterRepository {
@@ -14,7 +14,7 @@ class RegisterRepository implements IRegisterRepository {
   RegisterRepository({required this.datasource});
 
   @override
-  Future<User> register({required UserRegisterParams user}) async {
+  Future<TokenModel> register({required UserRegisterParams user}) async {
     try {
       final result = await datasource.register(
         user: user,
@@ -22,7 +22,7 @@ class RegisterRepository implements IRegisterRepository {
 
       final data = jsonDecode(result.body);
 
-      return User.fromJson(data);
+      return TokenModel.fromJson(data);
     } catch (e) {
       rethrow;
     }

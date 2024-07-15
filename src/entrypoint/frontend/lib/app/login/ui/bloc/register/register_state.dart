@@ -1,4 +1,4 @@
-import '../../../data/models/user_model.dart';
+import '../../../data/models/token_model.dart';
 
 abstract class RegisterState {}
 
@@ -7,7 +7,7 @@ class RegisterInitial extends RegisterState {}
 class RegisterLoading extends RegisterState {}
 
 class RegisterSuccess extends RegisterState {
-  final User user;
+  final TokenModel user;
 
   RegisterSuccess({required this.user});
 }

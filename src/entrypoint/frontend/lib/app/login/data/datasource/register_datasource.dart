@@ -16,7 +16,7 @@ class RegisterDatasource implements IRegisterDatasource {
   Future<Response> register({required UserRegisterParams user}) async {
     try {
       final result = await http.post(
-        '/register',
+        '/sign_up/',
         user.toJson(),
       );
 

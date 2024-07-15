@@ -16,7 +16,7 @@ class LoginDatasource implements ILoginDatasource {
   Future<Response> login({required UserLoginParams user}) async {
     try {
       final result = await http.post(
-        '/login',
+        '/login/',
         user.toJson(),
       );
 
