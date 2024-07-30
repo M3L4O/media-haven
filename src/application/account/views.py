@@ -49,4 +49,4 @@ class LogoutView(GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid()
         serializer.save()
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)

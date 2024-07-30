@@ -5,13 +5,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .managers import AccountManager
 
-AUTH_PROVIDERS = {
-    "email": "email",
-    "google": "google",
-    "github": "github",
-    "linkedin": "linkedin",
-}
-
 
 class Account(AbstractBaseUser, PermissionsMixin):
     id = models.BigAutoField(primary_key=True, editable=False)
@@ -19,15 +12,14 @@ class Account(AbstractBaseUser, PermissionsMixin):
         max_length=255, unique=True, verbose_name=_("Email Adress")
     )
     username = models.CharField(max_length=100, verbose_name=_("Username"))
+    profile_image = models.FilePathField(default=False)
+    description = models.CharField(max_length=255, default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateField(auto_now_add=True)
     last_login = models.DateField(auto_now=True)
-    auth_provider = models.CharField(
-        max_length=50, blank=False, null=False, default=AUTH_PROVIDERS.get("email")
-    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
