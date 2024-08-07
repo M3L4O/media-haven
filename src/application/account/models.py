@@ -20,7 +20,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     date_joined = models.DateField(auto_now_add=True)
     last_login = models.DateField(auto_now=True)
-
+    
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
