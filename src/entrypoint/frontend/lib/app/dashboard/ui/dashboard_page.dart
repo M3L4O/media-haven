@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/injection_container.dart';
 import '../../../core/theme/mh_colors.dart';
@@ -7,6 +8,7 @@ import '../../login/ui/bloc/load_session/load_session_bloc.dart';
 import '../../login/ui/bloc/load_session/load_session_state.dart';
 import '../../login/ui/bloc/logout/logout_bloc.dart';
 import '../../login/ui/bloc/logout/logout_state.dart';
+import '../../login/ui/login_page.dart';
 import 'widgets/custom_drawer.dart';
 import 'widgets/media_content_grid.dart';
 import 'widgets/message_component.dart';
@@ -40,7 +42,12 @@ class _DashboardState extends State<Dashboard> {
           bloc: logoutBloc,
           listener: (context, state) {
             if (state is LogoutSuccess) {
-              Navigator.of(context).pushReplacementNamed('/login');
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginPage(),
+                ),
+              );
             }
           },
         ),
@@ -114,12 +121,24 @@ class _DashboardState extends State<Dashboard> {
                 );
               }
 
-              return const Scaffold(
+              return Scaffold(
                 body: MessageComponent(
                   animationPath: 'assets/animations/error_animation.json',
                   message:
                       'Erro ao carregar a página :(\nTente fazer login novamente.',
                   size: 150,
+                  onTap: () async {
+                    final prefs = sl.get<SharedPreferences>();
+                    await prefs.clear();
+                    if (context.mounted) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPage(),
+                        ),
+                      );
+                    }
+                  },
                 ),
               );
             },

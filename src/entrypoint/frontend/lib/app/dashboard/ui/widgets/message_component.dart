@@ -3,6 +3,7 @@ import 'package:lottie/lottie.dart';
 
 import '../../../../core/helpers/custom_size.dart';
 import '../../../../core/theme/mh_colors.dart';
+import '../../../login/ui/widgets/custom_button.dart';
 
 class MessageComponent extends StatelessWidget {
   const MessageComponent({
@@ -10,11 +11,13 @@ class MessageComponent extends StatelessWidget {
     required this.animationPath,
     required this.message,
     this.size = 300,
+    this.onTap,
   });
 
   final String animationPath;
   final String message;
   final double size;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +42,12 @@ class MessageComponent extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
+          24.h,
+          if (onTap != null)
+            CustomButton(
+              text: '',
+              onTap: onTap!,
+            ),
           (MediaQuery.of(context).size.height * 0.18).h,
         ],
       ),

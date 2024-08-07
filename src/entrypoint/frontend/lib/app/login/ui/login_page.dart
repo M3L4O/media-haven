@@ -2,12 +2,14 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/app/login/ui/bloc/login/login_bloc.dart';
-import 'package:frontend/app/login/ui/bloc/login/login_state.dart';
-import 'package:frontend/app/login/ui/bloc/register/register_bloc.dart';
-import 'package:frontend/app/login/ui/bloc/register/register_state.dart';
-import 'package:frontend/app/login/ui/widgets/form_options.dart';
-import 'package:frontend/core/injection_container.dart';
+
+import '../../../core/injection_container.dart';
+import '../../dashboard/ui/dashboard_page.dart';
+import 'bloc/login/login_bloc.dart';
+import 'bloc/login/login_state.dart';
+import 'bloc/register/register_bloc.dart';
+import 'bloc/register/register_state.dart';
+import 'widgets/form_options.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,7 +21,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   late ILoginBloc loginBloc;
   late IRegisterBloc registerBloc;
-
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
@@ -76,9 +77,11 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             );
                           } else if (state is LoginSuccess) {
-                            Navigator.pushReplacementNamed(
+                            Navigator.pushReplacement(
                               context,
-                              '/dashboard',
+                              MaterialPageRoute(
+                                builder: (context) => const Dashboard(),
+                              ),
                             );
                           }
                         },
@@ -93,9 +96,11 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             );
                           } else if (state is RegisterSuccess) {
-                            Navigator.pushReplacementNamed(
+                            Navigator.pushReplacement(
                               context,
-                              '/dashboard',
+                              MaterialPageRoute(
+                                builder: (context) => const Dashboard(),
+                              ),
                             );
                           }
                         },
