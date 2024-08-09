@@ -6,6 +6,7 @@ from pydub import AudioSegment
 from pydub.utils import mediainfo
 from rest_framework import serializers
 from rest_framework.exceptions import UnsupportedMediaType
+from django.conf import settings
 
 from .models import Audio, Image
 
@@ -53,12 +54,17 @@ class ImageUploadSerializer(serializers.ModelSerializer):
         MIME_type = file.content_type
         file_size = file.size
         bytes_img = file.file
+        
         image = pImage.open(bytes_img)
         width, height = image.size
         color_depth = mode_to_bpp[image.mode]
-        os.makedirs(f"{user.id}/images/", exist_ok=True)
-        file_path = f"{user.id}/images/{file._name}"
-        image.save(file_path)
+        
+        user_images_path = f"{settings.MEDIA_ROOT}/{user.id}/images/"
+        os.makedirs(user_images_path, exist_ok=True)
+        file_path = f"{user_images_path}/{file._name}"
+        
+        with open(file_path, "wb") as binary_file:
+            binary_file.write(bytes_img)
 
         return Image.objects.create(
             file=file_path,

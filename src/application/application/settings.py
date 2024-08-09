@@ -88,7 +88,7 @@ else:
     }
 }
 
-
+MEDIA_ROOT = os.environ.get('MEDIA_ROOT_PATH', "cache/")
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=10),
