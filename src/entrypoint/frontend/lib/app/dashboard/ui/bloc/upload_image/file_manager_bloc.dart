@@ -7,6 +7,7 @@ import '../../../data/models/file_base.dart';
 import '../../../data/models/file_params.dart';
 import '../../../data/models/image_model.dart';
 import '../../../data/repository/file_manager_repository.dart';
+import '../../widgets/media_content.dart';
 import 'file_manager_state.dart';
 
 abstract class IFileManagerBloc extends Cubit<FileManagerState> {
@@ -16,11 +17,13 @@ abstract class IFileManagerBloc extends Cubit<FileManagerState> {
   Future<void> uploadFile();
   Future<void> deleteFile(FileBase file);
   Future<void> searchFiles({required String text});
+  Future<void> changeMediaType(TypeFile type);
 }
 
 class FileManagerBloc extends IFileManagerBloc {
   final IFileManagerRepository repository;
   final SharedPreferences sharedPreferences;
+  final List<FileBase> files = [];
 
   FileManagerBloc({
     required this.repository,
@@ -36,8 +39,6 @@ class FileManagerBloc extends IFileManagerBloc {
 
       final images = await repository.getImages(token: token);
       final audios = await repository.getAudios(token: token);
-
-      final files = <FileBase>[];
 
       files
         ..addAll(images)
@@ -58,9 +59,7 @@ class FileManagerBloc extends IFileManagerBloc {
       final file = await getFile();
 
       if (file == null) {
-        emit(FileManagerFailure(
-          message: 'Erro ao selecionar arquivo',
-        ));
+        emit(FileManagerFailure(message: 'Erro ao selecionar arquivo'));
       }
 
       final token = sharedPreferences.getString('token') ?? '';
@@ -72,9 +71,7 @@ class FileManagerBloc extends IFileManagerBloc {
 
       emit(FileManagerSuccess(result: result));
     } catch (e) {
-      emit(FileManagerFailure(
-        message: 'Erro ao fazer upload do arquivo',
-      ));
+      emit(FileManagerFailure(message: 'Erro ao fazer upload do arquivo'));
     }
   }
 
@@ -102,53 +99,47 @@ class FileManagerBloc extends IFileManagerBloc {
 
   @override
   Future<void> searchFiles({required String text}) async {
-    final currentState = state;
-    if (currentState is FileManagerSuccess) {
-      final files = currentState.files;
-      if (files == null || files.isEmpty) return;
+    if (files.isEmpty) return;
 
-      emit(FileManagerLoading());
+    try {
+      final result = files.where((element) {
+        return element.name.toLowerCase().contains(text.toLowerCase());
+      }).toList();
 
-      try {
-        final result = files.where((element) {
-          if (element is ImageModel) {
-            return element.name.toLowerCase().contains(text.toLowerCase());
-          } else if (element is AudioModel) {
-            return element.name.contains(text);
-          }
-          return false;
-        }).toList();
-
-        result.map((e) => print(e.name));
-
-        emit(FileManagerSuccess(files: result));
-      } catch (e) {
-        emit(FileManagerFailure(
-          message: 'Erro ao carregar arquivos',
-        ));
-      }
+      emit(FileManagerSuccess(files: result));
+    } catch (e) {
+      emit(FileManagerFailure(message: 'Erro ao carregar arquivos'));
     }
   }
 
   @override
   Future<void> deleteFile(FileBase file) async {
     try {
-      final currentState = state;
-      if (currentState is FileManagerSuccess) {
-        final files = currentState.files;
-        if (files == null || files.isEmpty) return;
+      final token = sharedPreferences.getString('token') ?? '';
+      final result = await repository.deleteFile(
+        file: file,
+        token: token,
+      );
 
-        final token = sharedPreferences.getString('token') ?? '';
-        final result = await repository.deleteFile(
-          file: file,
-          token: token,
-        );
-
-        files.remove(file);
-        emit(FileManagerSuccess(result: result, files: files));
-      }
+      files.remove(file);
+      emit(FileManagerSuccess(result: result, files: files));
     } catch (e) {
       emit(FileManagerFailure(message: 'Erro ao deletar arquivo'));
+    }
+  }
+
+  @override
+  Future<void> changeMediaType(TypeFile type) async {
+    try {
+      final filterList = switch (type) {
+        TypeFile.audios => files.whereType<AudioModel>().toList(),
+        TypeFile.fotosEImagens => files.whereType<ImageModel>().toList(),
+        _ => files,
+      };
+
+      emit(FileManagerSuccess(files: filterList));
+    } catch (_) {
+      emit(FileManagerFailure(message: 'Erro ao mudar o tipo de arquivo'));
     }
   }
 }

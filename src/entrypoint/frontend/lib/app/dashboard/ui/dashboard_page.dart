@@ -7,10 +7,10 @@ import '../../../core/theme/mh_colors.dart';
 import '../../login/ui/bloc/logout/logout_bloc.dart';
 import '../../login/ui/bloc/logout/logout_state.dart';
 import '../../login/ui/login_page.dart';
-import '../data/models/file_base.dart';
 import 'bloc/upload_image/file_manager_bloc.dart';
 import 'bloc/upload_image/file_manager_state.dart';
 import 'widgets/custom_drawer.dart';
+import 'widgets/dashboard_header.dart';
 import 'widgets/media_content.dart';
 import 'widgets/message_component.dart';
 
@@ -36,7 +36,6 @@ class _DashboardState extends State<Dashboard> {
   late ILogoutBloc logoutBloc;
   late IFileManagerBloc fileManagerBloc;
   final List<bool> _selectedLayout = <bool>[true, false];
-  final fileListNotifier = ValueNotifier<List<FileBase>>([]);
 
   @override
   void initState() {
@@ -54,9 +53,7 @@ class _DashboardState extends State<Dashboard> {
           bloc: fileManagerBloc,
           listener: (context, state) {
             if (state is FileManagerSuccess) {
-              if (state.files != null) {
-                fileListNotifier.value = state.files!;
-              } else if (state.result != null) {
+              if (state.result != null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(state.result ?? ''),
@@ -146,40 +143,46 @@ class _DashboardState extends State<Dashboard> {
                 logoutBloc.logout();
               },
             ),
-            body: BlocBuilder(
-              bloc: fileManagerBloc,
-              builder: (context, state) {
-                if (state is FileManagerSuccess) {
-                  final files = state.files;
+            body: Column(
+              children: [
+                DashboardHeader(
+                  onTypeChanged: (type) {
+                    fileManagerBloc.changeMediaType(type);
+                  },
+                  onSearchChanged: (value) {
+                    fileManagerBloc.searchFiles(text: value);
+                  },
+                ),
+                Expanded(
+                  child: BlocBuilder(
+                    bloc: fileManagerBloc,
+                    builder: (context, state) {
+                      if (state is FileManagerSuccess) {
+                        final files = state.files;
 
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: files != null && files.isNotEmpty
-                        ? ValueListenableBuilder(
-                            valueListenable: fileListNotifier,
-                            builder: (context, files, _) {
-                              return MediaContent(
-                                files: files,
-                                isGrid: _selectedLayout[0],
-                                onSearchChanged: (value) {
-                                  fileManagerBloc.searchFiles(text: value);
-                                },
-                              );
-                            },
-                          )
-                        : const MessageComponent(
-                            animationPath:
-                                'assets/animations/empty_animation.json',
-                            message: 'Nenhuma mídia encontrada',
-                          ),
-                  );
-                }
+                        return Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: files != null && files.isNotEmpty
+                              ? MediaContent(
+                                  files: files,
+                                  isGrid: _selectedLayout[0],
+                                )
+                              : const MessageComponent(
+                                  animationPath:
+                                      'assets/animations/empty_animation.json',
+                                  message: 'Nenhuma mídia encontrada',
+                                ),
+                        );
+                      }
 
-                return const MessageComponent(
-                  animationPath: 'assets/animations/empty_animation.json',
-                  message: 'Nenhuma mídia encontrada',
-                );
-              },
+                      return const MessageComponent(
+                        animationPath: 'assets/animations/empty_animation.json',
+                        message: 'Nenhuma mídia encontrada',
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
             floatingActionButton: BlocBuilder(
               bloc: fileManagerBloc,

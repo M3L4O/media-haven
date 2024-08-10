@@ -35,8 +35,8 @@ class _LoginPageState extends State<LoginPage> {
     loginBloc = sl.get<ILoginBloc>();
     registerBloc = sl.get<IRegisterBloc>();
 
-    _emailController = TextEditingController();
-    _passwordController = TextEditingController();
+    _emailController = TextEditingController(text: 'melo@gmail.com');
+    _passwordController = TextEditingController(text: 'melo');
     _nameController = TextEditingController();
     _confirmPasswordController = TextEditingController();
     super.initState();

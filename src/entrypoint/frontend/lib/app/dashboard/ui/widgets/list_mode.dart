@@ -7,8 +7,8 @@ import '../../data/models/file_base.dart';
 import '../../data/models/image_model.dart';
 import 'audio_dialog.dart';
 import 'image_dialog.dart';
-import 'media_content.dart';
 import 'popup_menu_options.dart';
+import 'type_icon.dart';
 
 class ListMode extends StatelessWidget {
   final List<FileBase> files;
@@ -45,7 +45,7 @@ class ListMode extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  getTypeIcon(file),
+                  TypeIcon(file: file),
                   6.w,
                   Expanded(
                     child: Text(
