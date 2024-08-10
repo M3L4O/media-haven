@@ -39,7 +39,10 @@ class ImageListView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Image.objects.filter(account=user)
+        print(user)
+        images = Image.objects.filter(account=user)
+        print(images)
+        return images
 
 
 class ImageDetailView(RetrieveUpdateDestroyAPIView):
@@ -58,6 +61,20 @@ class ImageDetailView(RetrieveUpdateDestroyAPIView):
         if image is not None:
             serializer = self.serializer_class(image)
             return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, *args, **kwargs):
+        id = self.kwargs.get("id")
+        image = self.get_object(id)
+        data = request.data
+        if image is not None:
+            image.width = data["width"]
+            image.height = data["height"]
+            image.color_depth = data["color_depth"]
+            image.thumbnail = data["thumbnail"]
+            image.save(force_update=True)
+            return Response(status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -112,6 +129,21 @@ class AudioDetailView(RetrieveUpdateDestroyAPIView):
         if audio is not None:
             serializer = self.serializer_class(audio)
             return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, *args, **kwargs):
+        id = self.kwargs.get("id")
+        audio = self.get_object(id)
+        print(id)
+        data = request.data
+        if audio is not None:
+            audio.sampling_rate = data["sample_rate"]
+            audio.bitrate = float(data["bitrate"])
+            audio.duration = data["duration"]
+            audio.stereo = int(data["channels"]) > 1
+            audio.save(force_update=True)
+            return Response(status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 

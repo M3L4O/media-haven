@@ -49,6 +49,7 @@ class Image(File):
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
     color_depth = models.IntegerField(null=True)
+    thumbnail = models.FileField(null=True)
 
 
 class Video(File):
