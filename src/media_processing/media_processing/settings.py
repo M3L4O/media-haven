@@ -28,7 +28,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-APPLICATION_URL = os.environ.get("APPLICATION_URL", "http://0.0.0.0:8000")
 # Application definition
 
 INSTALLED_APPS = [
@@ -82,7 +81,15 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser'
+     )
+ }
+
 MEDIA_ROOT = os.environ.get('MEDIA_ROOT_PATH', "cache/")
+APPLICATION_URL = os.environ.get("APPLICATION_URL", "http://0.0.0.0:8000")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
