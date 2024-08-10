@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:http/http.dart';
 
 import '../../../../core/service/http_client.dart';
@@ -16,9 +18,11 @@ class LoginDatasource implements ILoginDatasource {
   Future<Response> login({required UserLoginParams user}) async {
     try {
       final result = await http.post(
-        '/login/',
+        'auth/login/',
         user.toJson(),
       );
+      
+      log(result.body);
 
       return result;
     } catch (e) {

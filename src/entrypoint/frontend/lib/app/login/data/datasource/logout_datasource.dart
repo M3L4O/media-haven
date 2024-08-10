@@ -16,7 +16,7 @@ class LogoutDatasource extends ILogoutDatasource {
   Future<Response> logout({required UserTokenParams user}) async {
     try {
       final result = await http.post(
-        '/logout/',
+        'auth/logout/',
         user.toJson(),
       );
 

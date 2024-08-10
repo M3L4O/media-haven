@@ -65,7 +65,7 @@ class _FormOptionsState extends State<FormOptions> {
                   TextSpan(
                     text: widget.loginMode
                         ? 'novamente!'
-                        : '\nComece a guardar suas mídias com o Media Haven.',
+                        : '\nComece a guardar suas mídias com o Media Heaven.',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ],

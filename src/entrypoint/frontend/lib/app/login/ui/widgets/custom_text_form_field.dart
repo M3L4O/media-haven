@@ -15,6 +15,7 @@ class CustomTextFormField extends StatelessWidget {
     this.inputFormatters,
     this.keyboardType,
     this.validator,
+    this.backgroundColor,
   });
 
   final String labelText;
@@ -26,6 +27,7 @@ class CustomTextFormField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class CustomTextFormField extends StatelessWidget {
       keyboardType: keyboardType ?? TextInputType.text,
       validator: validator,
       decoration: InputDecoration(
-        fillColor: MHColors.lightGray,
+        fillColor: backgroundColor ?? MHColors.lightGray,
         filled: true,
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(
@@ -60,8 +62,8 @@ class CustomTextFormField extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(
-            color: MHColors.lightGray,
+          borderSide: BorderSide(
+            color: backgroundColor ?? MHColors.lightGray,
           ),
         ),
         focusedBorder: OutlineInputBorder(
