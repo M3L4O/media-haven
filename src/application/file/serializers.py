@@ -1,11 +1,9 @@
 import os
-import ffmpeg._ffmpeg
 import requests as rq
 from rest_framework import serializers
 from rest_framework.exceptions import UnsupportedMediaType
 from django.conf import settings
 from threading import Thread
-import cv2
 
 from .models import Audio, Image, Video
 

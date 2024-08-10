@@ -81,13 +81,6 @@ DATABASES = {
     }
 }
 
-REST_FRAMEWORK = {
-    'DEFAULT_PARSER_CLASSES': (
-        'rest_framework.parsers.FormParser',
-        'rest_framework.parsers.MultiPartParser'
-     )
- }
-
 MEDIA_ROOT = os.environ.get('MEDIA_ROOT_PATH', "cache/")
 APPLICATION_URL = os.environ.get("APPLICATION_URL", "http://0.0.0.0:8000")
 
