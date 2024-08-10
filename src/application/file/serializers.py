@@ -1,18 +1,19 @@
 import os
+import ffmpeg._ffmpeg
 import requests as rq
 from rest_framework import serializers
 from rest_framework.exceptions import UnsupportedMediaType
 from django.conf import settings
 from threading import Thread
+import cv2
 
-from .models import Audio, Image
-
+from .models import Audio, Image, Video
 
 def save_file(bytes_array, file_path, url, id, token):
     with open(file_path, "wb") as binary_file:
         binary_file.write(bytes_array.read())
+    
     rq.post(url, data={"file": os.path.abspath(file_path), "file_id": id, "access": token})
-
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -112,3 +113,54 @@ class AudioUploadSerializer(serializers.ModelSerializer):
         Thread(target=save_file, args=[bytes_audio, file_path, url, audio.id, token]).start()
 
         return audio
+
+
+class VideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = "__all__"
+
+
+class VideoUploadSerializer(serializers.ModelSerializer):
+    EXTs = ("mp4", "avi", "mov", "webm")
+    file = serializers.FileField()
+
+    class Meta:
+        model = Video
+        fields = ["file"]
+
+    def validate(self, attrs):
+        file = attrs.get("file")
+        file_type, extension = file.content_type.split("/")
+        if file_type != "video":
+            raise UnsupportedMediaType(f"{file_type} não permitido.")
+        if extension not in self.EXTs:
+            raise UnsupportedMediaType(f"Tipo {extension} não suportado.")
+
+        return attrs
+
+    def create(self, validated_data):
+        user = self.context["request"].user
+        token = self.context["request"].META.get('HTTP_AUTHORIZATION')
+
+        file = validated_data.get("file")
+        MIME_type = file.content_type
+        file_size = file.size
+        bytes_audio = file.file
+        user_video_path = f"{settings.MEDIA_ROOT}{user.id}/videos"
+        os.makedirs(user_video_path, exist_ok=True)
+        file_path = f"{user_video_path}/{file._name}"
+        url = f"{settings.PROCESSOR_URL}/videos/"
+
+        video = Video.objects.create(
+            file=file_path,
+            file_size=file_size,
+            MIME_type=MIME_type,
+            description="",
+            account=user,
+        )
+        
+        Thread(target=save_file, args=[bytes_audio, file_path, url, video.id, token]).start()
+
+        return video
+    

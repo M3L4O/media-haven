@@ -53,7 +53,7 @@ class Image(File):
 
 
 class Video(File):
-    duration = models.TimeField(null=True)
+    duration = models.FloatField(null=True)
     width = models.IntegerField(null=True)
     height = models.IntegerField(null=True)
     video_codec = models.CharField(
@@ -66,9 +66,9 @@ class Video(File):
     )
     frame_rate = models.IntegerField(null=True)
     bitrate = models.IntegerField(null=True)
-    thumbnail = models.OneToOneField(Image, on_delete=models.CASCADE)
+    thumbnail = models.FileField(null=True)
     genre = models.ManyToManyField(Genre)
-    versions = models.ManyToManyField("self", symmetrical=False)
+    original_video = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='versions')
 
 
 class Audio(File):
