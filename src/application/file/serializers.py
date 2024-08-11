@@ -11,7 +11,7 @@ def save_file(bytes_array, file_path, url, id, token):
     with open(file_path, "wb") as binary_file:
         binary_file.write(bytes_array.read())
     
-    rq.post(url, data={"file": os.path.abspath(file_path), "file_id": id, "access": token})
+    rq.post(url, data={"file": file_path, "file_id": id, "access": token})
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,7 +47,7 @@ class ImageUploadSerializer(serializers.ModelSerializer):
         bytes_img = file.file
         user_images_path = f"{settings.MEDIA_ROOT}{user.id}/images"
         os.makedirs(user_images_path, exist_ok=True)
-        file_path = f"{user_images_path}/{file._name}"
+        file_path = os.path.abspath(f"{user_images_path}/{file._name}").replace(" ", "")
         url = f"{settings.PROCESSOR_URL}/images/"
 
         image = Image.objects.create(
@@ -97,7 +97,7 @@ class AudioUploadSerializer(serializers.ModelSerializer):
         bytes_audio = file.file
         user_audio_path = f"{settings.MEDIA_ROOT}{user.id}/audios"
         os.makedirs(user_audio_path, exist_ok=True)
-        file_path = f"{user_audio_path}/{file._name}"
+        file_path = os.path.abspath(f"{user_audio_path}/{file._name}").replace(" ", "")
         url = f"{settings.PROCESSOR_URL}/audios/"
 
         audio = Audio.objects.create(
@@ -147,7 +147,7 @@ class VideoUploadSerializer(serializers.ModelSerializer):
         bytes_audio = file.file
         user_video_path = f"{settings.MEDIA_ROOT}{user.id}/videos"
         os.makedirs(user_video_path, exist_ok=True)
-        file_path = f"{user_video_path}/{file._name}"
+        file_path = os.path.abspath(f"{user_video_path}/{file._name}").replace(" ", "")
         url = f"{settings.PROCESSOR_URL}/videos/"
 
         video = Video.objects.create(

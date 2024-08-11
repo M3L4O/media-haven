@@ -1,22 +1,24 @@
+import json
+
+from django.http import FileResponse
 from rest_framework import status
 from rest_framework.generics import (
     GenericAPIView,
-    RetrieveUpdateDestroyAPIView,
     ListAPIView,
+    RetrieveUpdateDestroyAPIView,
 )
 from rest_framework.parsers import FileUploadParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-import json
 
 from .models import Audio, Image, Video
 from .serializers import (
-    AudioUploadSerializer,
     AudioSerializer,
-    ImageUploadSerializer,
+    AudioUploadSerializer,
     ImageSerializer,
+    ImageUploadSerializer,
+    VideoSerializer,
     VideoUploadSerializer,
-    VideoSerializer,   
 )
 
 
@@ -42,14 +44,12 @@ class ImageListView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        print(user)
         images = Image.objects.filter(account=user)
-        print(images)
         return images
 
 
 class ImageDetailView(RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     serializer_class = ImageSerializer
 
     def get_object(self, id):
@@ -62,8 +62,7 @@ class ImageDetailView(RetrieveUpdateDestroyAPIView):
         id = self.kwargs.get("id")
         image = self.get_object(id)
         if image is not None:
-            serializer = self.serializer_class(image)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return FileResponse(open(image.file.name, "rb"), as_attachment=True)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -130,8 +129,7 @@ class AudioDetailView(RetrieveUpdateDestroyAPIView):
         id = self.kwargs.get("id")
         audio = self.get_object(id)
         if audio is not None:
-            serializer = self.serializer_class(audio)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return FileResponse(open(audio.file.name, "rb"), as_attachment=True)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -139,7 +137,7 @@ class AudioDetailView(RetrieveUpdateDestroyAPIView):
         id = self.kwargs.get("id")
         audio = self.get_object(id)
         data = request.data
-        
+
         if audio is not None:
             audio.sampling_rate = data["sample_rate"]
             audio.bitrate = float(data["bitrate"])
@@ -168,6 +166,7 @@ class VideoListView(ListAPIView):
         user = self.request.user
         return Video.objects.filter(account=user, original_video=None)
 
+
 class VideoUploadView(GenericAPIView):
     permission_classes = [IsAuthenticated]
     parser_class = (FileUploadParser,)
@@ -182,7 +181,8 @@ class VideoUploadView(GenericAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
+
 class VideoDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = VideoSerializer
@@ -197,16 +197,15 @@ class VideoDetailView(RetrieveUpdateDestroyAPIView):
         id = self.kwargs.get("id")
         video = self.get_object(id)
         if video is not None:
-            serializer = self.serializer_class(video)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return FileResponse(open(video.file.name, "rb"), as_attachment=True)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, *args, **kwargs):
         id = self.kwargs.get("id")
-        
+
         data = request.data
-  
+
         versions = json.loads(data["versions"])
 
         video = self.get_object(id)
@@ -219,7 +218,7 @@ class VideoDetailView(RetrieveUpdateDestroyAPIView):
             video.frame_rate = data["frame_rate"]
             video.bitrate = data["bitrate"]
             video.thumbnail = data["thumbnail"]
-            video.save()
+            video.save(force_update=True)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -230,8 +229,8 @@ class VideoDetailView(RetrieveUpdateDestroyAPIView):
             v["account"] = video.account
             v["original_video"] = video
 
-            Video.objects.create(**v).save()
-        
+            video = Video.objects.create(**v)
+
         return Response(status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
