@@ -1,12 +1,15 @@
 from rest_framework import status
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from .models import Account
 
 from .serializers import (
     AccountRegisterSerializer,
     LoginSerializer,
     LogoutSerializer,
+    AccountUpdateSerializer,
 )
 
 
@@ -49,4 +52,37 @@ class LogoutView(GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid()
         serializer.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+class AccountUpdateView(UpdateAPIView):
+    serializer_class = AccountUpdateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+    def put(self, request, *args, **kwargs):
+        account = self.get_object()
+
+        data = request.data
+        if account is not None:
+            try:
+                email = Account.objects.get(email=data["email"])
+                return Response(status=status.HTTP_409_CONFLICT)
+            except Account.DoesNotExist:
+                account.username = data["username"]
+                account.description = data["description"]
+                account.email = data["email"]
+                account.profile_image = data["profile_image"]
+                account.set_password(data["password"])
+                account.save(force_update=True)
+                return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+    def delete(self, request, *args, **kwargs):
+        account = self.get_object()
+
+        account.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
