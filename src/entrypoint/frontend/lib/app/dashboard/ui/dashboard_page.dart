@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/helpers/custom_size.dart';
 import '../../../core/injection_container.dart';
 import '../../../core/theme/mh_colors.dart';
-import '../../login/ui/bloc/load_session/load_session_bloc.dart';
-import '../../login/ui/bloc/load_session/load_session_state.dart';
 import '../../login/ui/bloc/logout/logout_bloc.dart';
 import '../../login/ui/bloc/logout/logout_state.dart';
 import '../../login/ui/login_page.dart';
+import 'bloc/upload_image/file_manager_bloc.dart';
+import 'bloc/upload_image/file_manager_state.dart';
 import 'widgets/custom_drawer.dart';
-import 'widgets/media_content_grid.dart';
+import 'widgets/dashboard_header.dart';
+import 'widgets/media_content.dart';
 import 'widgets/message_component.dart';
+
+const List<Widget> icons = <Widget>[
+  Icon(
+    Icons.grid_3x3,
+    size: 18,
+  ),
+  Icon(
+    Icons.menu,
+    size: 18,
+  ),
+];
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -21,23 +33,42 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  late List mediaContent;
-  late ILoadSessionBloc loadSessionBloc;
   late ILogoutBloc logoutBloc;
+  late IFileManagerBloc fileManagerBloc;
+  final List<bool> _selectedLayout = <bool>[true, false];
 
   @override
   void initState() {
-    loadSessionBloc = sl.get<ILoadSessionBloc>();
-    loadSessionBloc.loadSession();
     logoutBloc = sl.get<ILogoutBloc>();
+    fileManagerBloc = sl.get<IFileManagerBloc>();
+    fileManagerBloc.getFiles();
     super.initState();
-    mediaContent = [];
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
+        BlocListener(
+          bloc: fileManagerBloc,
+          listener: (context, state) {
+            if (state is FileManagerSuccess) {
+              if (state.result != null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.result ?? ''),
+                  ),
+                );
+              }
+            } else if (state is FileManagerFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
+            }
+          },
+        ),
         BlocListener(
           bloc: logoutBloc,
           listener: (context, state) {
@@ -63,85 +94,112 @@ class _DashboardState extends State<Dashboard> {
             );
           }
 
-          return BlocBuilder(
-            bloc: loadSessionBloc,
-            builder: (context, state) {
-              if (state is LoadSessionLoading) {
-                return const Scaffold(
-                  body: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              } else if (state is LoadSessionSuccess) {
-                return Scaffold(
-                  appBar: AppBar(
-                    title: const Text(
-                      'Dashboard',
-                    ),
-                    centerTitle: true,
-                    toolbarHeight: MediaQuery.of(context).size.height * 0.1,
-                    leading: Builder(
-                      builder: (BuildContext context) {
-                        return IconButton(
-                          onPressed: () {
-                            Scaffold.of(context).openDrawer();
-                          },
-                          icon: const Icon(Icons.menu),
-                          tooltip: 'Abrir Menu',
-                        );
-                      },
-                    ),
-                  ),
-                  drawer: CustomDrawer(
-                    username: state.user.username ?? '',
-                    onTapLogout: () {
-                      logoutBloc.logout();
-                    },
-                  ),
-                  body: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: mediaContent.isNotEmpty
-                        ? const MediaContentGrid()
-                        : const MessageComponent(
-                            animationPath:
-                                'assets/animations/empty_animation.json',
-                            message: 'Nenhuma mídia encontrada',
-                          ),
-                  ),
-                  floatingActionButton: FloatingActionButton(
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text(
+                'Dashboard',
+              ),
+              centerTitle: true,
+              toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+              leading: Builder(
+                builder: (BuildContext context) {
+                  return IconButton(
                     onPressed: () {
-                      // TODO: Adicionar mídias
+                      Scaffold.of(context).openDrawer();
                     },
-                    tooltip: 'Adicionar Mídias',
-                    child: const Icon(
-                      Icons.add,
-                      color: MHColors.white,
-                    ),
+                    icon: const Icon(Icons.menu),
+                    tooltip: 'Abrir Menu',
+                  );
+                },
+              ),
+              actions: [
+                SizedBox(
+                  height: 32,
+                  child: ToggleButtons(
+                    direction: Axis.horizontal,
+                    onPressed: (int index) {
+                      setState(() {
+                        for (int i = 0; i < _selectedLayout.length; i++) {
+                          _selectedLayout[i] = i == index;
+                        }
+                      });
+                    },
+                    borderRadius: const BorderRadius.all(Radius.circular(24)),
+                    borderColor: MHColors.lightGrayVariant,
+                    selectedBorderColor: MHColors.blue,
+                    selectedColor: MHColors.white,
+                    fillColor: MHColors.blue,
+                    color: MHColors.blue,
+                    isSelected: _selectedLayout,
+                    children: icons,
                   ),
-                );
-              }
-
-              return Scaffold(
-                body: MessageComponent(
-                  animationPath: 'assets/animations/error_animation.json',
-                  message:
-                      'Erro ao carregar a página :(\nTente fazer login novamente.',
-                  size: 150,
-                  onTap: () async {
-                    final prefs = sl.get<SharedPreferences>();
-                    await prefs.clear();
-                    if (context.mounted) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
-                        ),
-                      );
-                    }
+                ),
+                12.w,
+              ],
+            ),
+            drawer: CustomDrawer(
+              username: 'user0921',
+              email:'user@gmail.com',
+              onTapLogout: () {
+                logoutBloc.logout();
+              },
+            ),
+            body: Column(
+              children: [
+                DashboardHeader(
+                  onTypeChanged: (type) {
+                    fileManagerBloc.changeMediaType(type);
+                  },
+                  onSearchChanged: (value) {
+                    fileManagerBloc.searchFiles(text: value);
                   },
                 ),
-              );
-            },
+                Expanded(
+                  child: BlocBuilder(
+                    bloc: fileManagerBloc,
+                    builder: (context, state) {
+                      if (state is FileManagerSuccess) {
+                        final files = state.files;
+
+                        return Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: files != null && files.isNotEmpty
+                              ? MediaContent(
+                                  files: files,
+                                  isGrid: _selectedLayout[0],
+                                )
+                              : const MessageComponent(
+                                  animationPath:
+                                      'assets/animations/empty_animation.json',
+                                  message: 'Nenhuma mídia encontrada',
+                                ),
+                        );
+                      }
+
+                      return const MessageComponent(
+                        animationPath: 'assets/animations/empty_animation.json',
+                        message: 'Nenhuma mídia encontrada',
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+            floatingActionButton: BlocBuilder(
+              bloc: fileManagerBloc,
+              builder: (context, state) {
+                return FloatingActionButton(
+                  onPressed: () {
+                    fileManagerBloc.uploadFile();
+                  },
+                  tooltip: 'Adicionar Mídias',
+                  child: const Icon(
+                    Icons.add,
+                    color: MHColors.white,
+                  ),
+                );
+              },
+            ),
           );
         },
       ),

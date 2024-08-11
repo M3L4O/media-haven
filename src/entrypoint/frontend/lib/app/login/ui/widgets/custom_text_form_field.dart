@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import '../../../../core/theme/mh_colors.dart';
 
 class CustomTextFormField extends StatelessWidget {
@@ -15,6 +14,8 @@ class CustomTextFormField extends StatelessWidget {
     this.inputFormatters,
     this.keyboardType,
     this.validator,
+    this.backgroundColor,
+    this.enabled = true,
   });
 
   final String labelText;
@@ -26,6 +27,8 @@ class CustomTextFormField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
+  final Color? backgroundColor;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +40,9 @@ class CustomTextFormField extends StatelessWidget {
       inputFormatters: inputFormatters ?? [],
       keyboardType: keyboardType ?? TextInputType.text,
       validator: validator,
+      enabled: enabled,
       decoration: InputDecoration(
-        fillColor: MHColors.lightGray,
+        fillColor: backgroundColor ?? MHColors.lightGray,
         filled: true,
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(
@@ -60,8 +64,8 @@ class CustomTextFormField extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(
-            color: MHColors.lightGray,
+          borderSide: BorderSide(
+            color: backgroundColor ?? MHColors.lightGray,
           ),
         ),
         focusedBorder: OutlineInputBorder(
