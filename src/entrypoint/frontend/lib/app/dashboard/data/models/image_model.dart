@@ -1,7 +1,7 @@
 import 'file_base.dart';
 
 class ImageModel extends FileBase {
-  int? fileSize;
+  double? fileSize;
   String? uploadDate;
   String? mIMEType;
   String? description;

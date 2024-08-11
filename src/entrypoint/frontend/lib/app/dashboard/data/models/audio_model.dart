@@ -1,13 +1,13 @@
 import 'file_base.dart';
 
 class AudioModel extends FileBase {
-  int? fileSize;
+  double? fileSize;
   String? uploadDate;
   String? mIMEType;
   String? description;
   double? duration;
   int? bitrate;
-  int? samplingRate;
+  double? samplingRate;
   bool? stereo;
   int? account;
 
