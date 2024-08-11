@@ -28,12 +28,9 @@ class ListMode extends StatelessWidget {
           child: InkWell(
             onTap: () {
               if (file is AudioModel) {
-                audioDialog(context);
+                audioDialog(context, file);
               } else if (file is ImageModel) {
-                imageDialog(
-                  context,
-                  file,
-                );
+                imageDialog(context, file);
               }
             },
             borderRadius: BorderRadius.circular(10.0),

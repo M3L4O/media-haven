@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/helpers/custom_size.dart';
 import '../../../../core/theme/mh_colors.dart';
 import '../../data/models/image_model.dart';
 
@@ -15,18 +16,32 @@ Future<dynamic> imageDialog(BuildContext context, ImageModel file) {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Column(
-                  children: [
-                    Icon(
-                      Icons.close,
-                      color: MHColors.gray,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  4.w,
+                  Text(
+                    file.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: MHColors.darkGray,
                     ),
-                  ],
-                ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Column(
+                      children: [
+                        Icon(
+                          Icons.close,
+                          color: MHColors.gray,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(
@@ -42,6 +57,7 @@ Future<dynamic> imageDialog(BuildContext context, ImageModel file) {
                     ),
                   ),
                 ),
+                // Image.memory(),
               ),
             ),
           ],

@@ -48,7 +48,7 @@ class _GridModeState extends State<GridMode> {
               InkWell(
                 onTap: () {
                   if (file is AudioModel) {
-                    audioDialog(context);
+                    audioDialog(context, file);
                   } else if (file is ImageModel) {
                     imageDialog(context, file);
                   }
