@@ -89,6 +89,8 @@ else:
     }
 
 MEDIA_ROOT = os.environ.get("MEDIA_ROOT_PATH", "cache/")
+# MEDIA_ROOT  = os.path.join(BASE_DIR, 'cache/')
+
 
 PROCESSOR_URL = os.environ.get("PROCESSOR_URL", "http://0.0.0.0:3000")
 
