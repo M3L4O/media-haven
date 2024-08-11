@@ -36,7 +36,7 @@ class File(models.Model):
 
     def __str__(self):
         return self.file.name
-    
+
     def delete(self, using=None, keep_parents=False):
         self.file.storage.delete(self.file.name)
         super().delete()
@@ -46,31 +46,34 @@ class File(models.Model):
 
 
 class Image(File):
-    width = models.IntegerField()
-    height = models.IntegerField()
-    color_depth = models.IntegerField()
+    width = models.IntegerField(null=True)
+    height = models.IntegerField(null=True)
+    color_depth = models.IntegerField(null=True)
+    thumbnail = models.FileField(null=True)
 
 
 class Video(File):
-    duration = models.TimeField()
-    width = models.IntegerField()
-    height = models.IntegerField()
+    duration = models.FloatField(null=True)
+    width = models.IntegerField(null=True)
+    height = models.IntegerField(null=True)
     video_codec = models.CharField(
         max_length=100,
+        null=True,
     )
     audio_codec = models.CharField(
         max_length=100,
+        null=True,
     )
-    frame_rate = models.IntegerField()
-    bitrate = models.IntegerField()
-    thumbnail = models.OneToOneField(Image, on_delete=models.CASCADE)
+    frame_rate = models.IntegerField(null=True)
+    bitrate = models.IntegerField(null=True)
+    thumbnail = models.FileField(null=True)
     genre = models.ManyToManyField(Genre)
-    versions = models.ManyToManyField("self", symmetrical=False)
+    original_video = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='versions')
 
 
 class Audio(File):
-    duration = models.FloatField()
-    bitrate = models.IntegerField()
-    sampling_rate = models.FloatField()
+    duration = models.FloatField(null=True)
+    bitrate = models.IntegerField(null=True)
+    sampling_rate = models.FloatField(null=True)
     genre = models.ManyToManyField(Genre)
-    stereo = models.BooleanField()
+    stereo = models.BooleanField(null=True)

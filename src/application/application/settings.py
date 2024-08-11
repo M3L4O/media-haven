@@ -82,13 +82,15 @@ if "RDS_DB_NAME" in os.environ:
     }
 else:
     DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
 
+MEDIA_ROOT = os.environ.get("MEDIA_ROOT_PATH", "cache/")
 
+PROCESSOR_URL = os.environ.get("PROCESSOR_URL", "http://0.0.0.0:3000")
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=10),
