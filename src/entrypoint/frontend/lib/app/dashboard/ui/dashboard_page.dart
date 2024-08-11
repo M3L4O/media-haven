@@ -138,7 +138,8 @@ class _DashboardState extends State<Dashboard> {
               ],
             ),
             drawer: CustomDrawer(
-              username: '',
+              username: 'user0921',
+              email:'user@gmail.com',
               onTapLogout: () {
                 logoutBloc.logout();
               },
