@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/app/dashboard/ui/widgets/select_type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/audio_model.dart';
@@ -7,7 +8,6 @@ import '../../../data/models/file_base.dart';
 import '../../../data/models/file_params.dart';
 import '../../../data/models/image_model.dart';
 import '../../../data/repository/file_manager_repository.dart';
-import '../../widgets/media_content.dart';
 import 'file_manager_state.dart';
 
 abstract class IFileManagerBloc extends Cubit<FileManagerState> {
