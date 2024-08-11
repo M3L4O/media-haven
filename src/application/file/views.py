@@ -49,7 +49,7 @@ class ImageListView(ListAPIView):
 
 
 class ImageDetailView(RetrieveUpdateDestroyAPIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     serializer_class = ImageSerializer
 
     def get_object(self, id):
