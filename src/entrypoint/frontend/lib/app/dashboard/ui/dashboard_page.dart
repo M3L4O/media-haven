@@ -7,6 +7,7 @@ import '../../../core/theme/mh_colors.dart';
 import '../../login/ui/bloc/logout/logout_bloc.dart';
 import '../../login/ui/bloc/logout/logout_state.dart';
 import '../../login/ui/login_page.dart';
+import 'bloc/player_audio/player_bloc.dart';
 import 'bloc/upload_image/file_manager_bloc.dart';
 import 'bloc/upload_image/file_manager_state.dart';
 import 'widgets/custom_drawer.dart';
@@ -35,6 +36,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   late ILogoutBloc logoutBloc;
   late IFileManagerBloc fileManagerBloc;
+  late IPlayerAudioBloc playerAudioBloc;
   final List<bool> _selectedLayout = <bool>[true, false];
 
   @override
@@ -42,7 +44,16 @@ class _DashboardState extends State<Dashboard> {
     logoutBloc = sl.get<ILogoutBloc>();
     fileManagerBloc = sl.get<IFileManagerBloc>();
     fileManagerBloc.getFiles();
+    playerAudioBloc = sl.get<IPlayerAudioBloc>();
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    playerAudioBloc.stop();
+    playerAudioBloc.close();
+    super.dispose();
   }
 
   @override
