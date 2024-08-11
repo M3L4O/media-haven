@@ -47,8 +47,10 @@ dependencies:
   shared_preferences: ^2.2.3
   file_picker: ^8.0.7
   mime: ^1.0.5
-  just_audio: ^0.9.39
+  # just_audio: ^0.9.39
   http_parser: ^4.0.2
+  audioplayers: ^6.0.0
+  video_player: ^2.9.1
 
 dev_dependencies:
   flutter_test:
