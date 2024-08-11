@@ -36,6 +36,7 @@ class _DashboardState extends State<Dashboard> {
   late ILogoutBloc logoutBloc;
   late IFileManagerBloc fileManagerBloc;
   final List<bool> _selectedLayout = <bool>[true, false];
+  String? _renamedText;
 
   @override
   void initState() {
@@ -43,6 +44,67 @@ class _DashboardState extends State<Dashboard> {
     fileManagerBloc = sl.get<IFileManagerBloc>();
     fileManagerBloc.getFiles();
     super.initState();
+  }
+
+  void _showOptionsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.share),
+                    title: const Text('Compartilhar'),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      // Ação para Compartilhar
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.edit),
+                    title: const Text('Renomear'),
+                    onTap: () {
+                      setState(() {
+                        _renamedText = '';
+                      });
+                    },
+                  ),
+                  if (_renamedText != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          labelText: 'Insira o novo nome',
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            _renamedText = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ListTile(
+                    leading: const Icon(Icons.delete),
+                    title: const Text('Deletar'),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      // Ação para Deletar
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -182,6 +244,10 @@ class _DashboardState extends State<Dashboard> {
                       );
                     },
                   ),
+                ),
+                ElevatedButton(
+                  onPressed: _showOptionsDialog,
+                  child: const Text('Menu do crud dos apps'),
                 ),
               ],
             ),
