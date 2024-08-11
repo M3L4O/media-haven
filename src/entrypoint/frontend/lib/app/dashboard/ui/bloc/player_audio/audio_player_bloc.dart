@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'player_audio_state.dart';
+import 'audio_player_state.dart';
 
-abstract class IPlayerAudioBloc extends Cubit<PlayerAudioState> {
-  IPlayerAudioBloc() : super(PlayerAudioState());
+abstract class IAudioPlayerBloc extends Cubit<PlayerAudioState> {
+  IAudioPlayerBloc() : super(PlayerAudioState());
 
   Future<void> setUrl({required String url});
   Future<void> togglePlayButton();
@@ -14,8 +14,8 @@ abstract class IPlayerAudioBloc extends Cubit<PlayerAudioState> {
   Future<void> stop();
 }
 
-class PlayerAudioBloc extends IPlayerAudioBloc {
-  final player = AudioPlayer(); // Create a player
+class AudioPlayerBloc extends IAudioPlayerBloc {
+  final player = AudioPlayer();
   StreamSubscription<Duration>? listenDuration;
 
   @override
@@ -25,16 +25,7 @@ class PlayerAudioBloc extends IPlayerAudioBloc {
     try {
       if (player.state == PlayerState.paused) {
         emit(state.copyWith(isPlaying: true, isPaused: false));
-
-        final position = await player.getCurrentPosition();
-
-        final source = player.source;
-        if (source != null) {
-          print(position);
-          player.play(source, position: position);
-          print('§ued;');
-        }
-
+        await player.resume();
         print('resumed');
         return;
       } else if (player.state == PlayerState.playing) {
@@ -49,7 +40,7 @@ class PlayerAudioBloc extends IPlayerAudioBloc {
       final source = player.source;
       if (source != null) {
         player.play(source);
-        print('§ued;');
+        print('played');
       }
     } catch (e) {
       emit(state.copyWith(error: e.toString()));
