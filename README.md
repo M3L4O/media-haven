@@ -3,15 +3,19 @@
 ## Sobre
 Projeto desenvolvido para a disciplina de Tópicos em Engenharia de Software, com objetivo de aprofundar os conhecimentos de criaçāo de aplicaçōes em nuvem da AWS. O **frontend** foi criado utilizando o Framework [Flutter](https://flutter.dev/) e a Linguagem [Dart](https://dart.dev/), enquanto o **backend** utiliza uma API desenvolvida com [Django](https://docs.djangoproject.com/en/5.0/ref/). 
 
-## Funcionalidades (1ª iteraçāo)
+## Funcionalidades
 Acerca das funcionalidades desenvolvidas:
 
 1. Login da pessoa usuária;
 2. Cadastro da pessoa usuária;
 3. Logout;
-4. Load Session (verificaçāo de sessāo para manter _Dashboard_ disponível). 
+4. Upload de imagens, vídeos e aúdios;
+5. Delete de imagens, vídeos e aúdios;
+6. Destalhes de imagens, vídeios e aúdios;
+7. Visualizaçāo dos arquivos;
+8. Listagem com busca e filtros.
 
-https://github.com/user-attachments/assets/654826d9-a9ff-48dc-93fa-ecc962064bc4
+**[🔗 link para vídeos do projeto em execuçāo](https://drive.google.com/drive/folders/13thCFGqY-M-tHVMUQ1vovENslBGf-MDR?usp=sharing)** 
 
 ## Frontend (Framework Flutter)
 
@@ -23,6 +27,25 @@ Algumas bilbiotecas também foram utilizadas:
 
 > `http`: Biblioteca utilizada para fazer requisição HTTP.
 
+> `google_fonts`: Biblioteca utilizada para facilitar o uso de fontes do Google no projeto.
+
+> `lottie`: Biblioteca utilizada para exibir animações Lottie.
+
+> `shared_preferences`: Biblioteca utilizada para armazenar dados de forma persistente no dispositivo.
+
+> `file_picker`: Biblioteca utilizada para selecionar arquivos do dispositivo.
+
+> `mime`: Biblioteca utilizada para identificar o tipo MIME de arquivos.
+
+> `http_parser`: Biblioteca utilizada para analisar e manipular URLs e dados de requisições HTTP.
+
+> `video_player`: Biblioteca utilizada para reproduzir vídeos no aplicativo.
+
+> `html`: Biblioteca utilizada para renderizar e manipular HTML.
+
+> `just_audio`: Biblioteca utilizada para reprodução de áudio.
+
+> `cached_network_image`: Biblioteca utilizada para carregar e armazenar em cache imagens da internet.
 
 ### Como executar no Flutter
 
