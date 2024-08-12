@@ -8,6 +8,7 @@ import '../../../data/models/audio_model.dart';
 import '../../../data/models/file_base.dart';
 import '../../../data/models/file_params.dart';
 import '../../../data/models/image_model.dart';
+import '../../../data/models/video_model.dart';
 import '../../../data/repository/file_manager_repository.dart';
 import '../../widgets/select_type.dart';
 import 'file_manager_state.dart';
@@ -139,6 +140,7 @@ class FileManagerBloc extends IFileManagerBloc {
       final filterList = switch (type) {
         TypeFile.audios => files.whereType<AudioModel>().toList(),
         TypeFile.fotosEImagens => files.whereType<ImageModel>().toList(),
+        TypeFile.videos => files.whereType<VideoModel>().toList(),
         _ => files,
       };
 
