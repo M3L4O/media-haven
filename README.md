@@ -64,14 +64,73 @@ flutter run
 ```
 
 ## Backend (Django Restframework API)
+Primeiramente é necessário configurar o ambiente para a aplicação, começando pela montagem do S3 nas instâncias.
+
+Utilizando o AMZ Linux:
+
+```bash
+sudo yum install git
+sudo yum groupinstall "Development Tools"
+sudo yum install fuse
+sudo yum install automake autoconf gcc-c++ libcurl-devel libxml2-devel
+git clone https://github.com/s3fs-fuse/s3fs-fuse.git
+cd s3fs-fuse
+./autogen.sh
+./configure
+make
+sudo make install
+```
+
+Utilizando Ubuntu pode-se instalar via APT, o gerenciador de pacote do ubuntu:
+
+```bash
+sudo apt-get install s3fs -y
+```
+
+Ou pode-se instalar a partir do código fonte
+
+```bash
+sudo apt-get install automake autotools-dev fuse g++ git libcurl4-gnutls-dev libfuse-dev libssl-dev libxml2-dev make pkg-config
+git clone https://github.com/s3fs-fuse/s3fs-fuse.git
+cd s3fs-fuse
+./autogen.sh
+./configure
+make
+sudo make install
+```
+
+Com o S3FS instalado, agora é necessário criar a pasta onde será o ponto de montagem:
+
+```bash
+mkdir /home/media
+```
+
+Com a pasta pronta, basta apenas criar o arquivo secreto:
+
+```bash
+echo "ACCESS_KEY_ID:SECRET_ACCESS_KEY" > ~/.passwd-s3fs
+chmod 600 ~/.passwd-s3fs
+```
+
+E, por fim, realmente montar o S3 numa instância EC2:
+
+```bash
+sudo s3fs bucket-name /home/media/ -o passwd_file=~/.passwd-s3fs -o url=https://s3.amazonaws.com
+```
+Para verificar se está realmente montado, pode-se criar arquivos e olhar na interface do S3:
+
+```bash
+cd /home/media
+touch teste.txt
+```
+Se aparecer o arquivo na interface, logo o S3 está realmente montado.
 
 Link para a documentação completa da API:
 > https://documenter.getpostman.com/view/33062932/2sA3rxpsk4
 
-
 ### Como executar as DRF APIs
 
-Primeiramente é necessário clonar o repositório da aplicação:
+É necessário clonar o repositório da aplicação:
 
 ```bash
 git clone https://github.com/M3L4O/media-haven.git
@@ -84,6 +143,19 @@ python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
+Após isso, é necessário configurar as variáveis de ambiente:
+
+```bash
+export RDS_DB_NAME=<db_name>
+export RDS_USERNAME=<username>
+export RDS_PASSWORD=<password>
+export RDS_HOSTNAME=<endpoint RDS>
+export RDS_PORT=5432
+export MEDIA_ROOT_PATH=<montagem S3>
+export PROCESSOR_URL=<ip_processor:port>
+export APPLICATION_URL=<ip_application:port>
+```
+
 Dessa forma é possível executar as duas APIs:
 
 (1) Servidor de aplicação:
