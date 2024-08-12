@@ -168,27 +168,20 @@ class _DashboardState extends State<Dashboard> {
                   child: BlocBuilder(
                     bloc: fileManagerBloc,
                     builder: (context, state) {
-                      if (state is FileManagerSuccess) {
-                        final files = state.files;
+                      final files = fileManagerBloc.currentFiles;
 
-                        return Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: files != null && files.isNotEmpty
-                              ? MediaContent(
-                                  files: files,
-                                  isGrid: _selectedLayout[0],
-                                )
-                              : const MessageComponent(
-                                  animationPath:
-                                      'assets/animations/empty_animation.json',
-                                  message: 'Nenhuma mídia encontrada',
-                                ),
-                        );
-                      }
-
-                      return const MessageComponent(
-                        animationPath: 'assets/animations/empty_animation.json',
-                        message: 'Nenhuma mídia encontrada',
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: files.isNotEmpty
+                            ? MediaContent(
+                                files: files,
+                                isGrid: _selectedLayout[0],
+                              )
+                            : const MessageComponent(
+                                animationPath:
+                                    'assets/animations/empty_animation.json',
+                                message: 'Nenhuma mídia encontrada',
+                              ),
                       );
                     },
                   ),

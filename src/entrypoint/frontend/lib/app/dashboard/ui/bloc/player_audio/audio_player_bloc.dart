@@ -64,22 +64,6 @@ class AudioPlayerBloc extends IAudioPlayerBloc {
         emit(state.copyWith(isPlaying: true));
       }
     });
-
-    // final audioDuration = await player.getDuration();
-    // return player.onPositionChanged.listen((event) {
-    //   print(event);
-    //   print(audioDuration);
-    //   emit(
-    //     state.copyWith(
-    //       position: event,
-    //       duration: audioDuration,
-    //     ),
-    //   );
-
-    //   if (audioDuration == event) {
-    //     emit(state.copyWith(isPlaying: false));
-    //   }
-    // });
   }
 
   @override

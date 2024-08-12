@@ -36,7 +36,7 @@ class _GridModeState extends State<GridMode> {
     return SliverGrid.builder(
       itemBuilder: (BuildContext context, int index) {
         final file = widget.files[index];
-    
+
         return SizedBox(
           height: double.infinity,
           child: Column(

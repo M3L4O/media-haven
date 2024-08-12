@@ -15,6 +15,7 @@ import 'file_manager_state.dart';
 
 abstract class IFileManagerBloc extends Cubit<FileManagerState> {
   IFileManagerBloc() : super(FileManagerInitial());
+  final List<FileBase> currentFiles = [];
 
   Future<void> getFiles();
   Future<void> uploadFile();
@@ -50,7 +51,10 @@ class FileManagerBloc extends IFileManagerBloc {
         ..addAll(audios)
         ..addAll(videos);
 
-      emit(FileManagerSuccess(files: files));
+      currentFiles.clear();
+      currentFiles.addAll(files);
+
+      emit(FileManagerSuccess());
     } catch (e) {
       emit(FileManagerFailure(
         message: 'Erro ao carregar arquivos',
@@ -60,18 +64,18 @@ class FileManagerBloc extends IFileManagerBloc {
 
   @override
   Future<void> uploadFile() async {
-    emit(FileManagerLoading());
     try {
       final file = await getFile();
 
       if (file == null) {
         emit(FileManagerFailure(message: 'Erro ao selecionar arquivo'));
+        return;
       }
 
       final token = sharedPreferences.getString('token') ?? '';
 
       final result = await repository.uploadFile(
-        file: file!,
+        file: file,
         token: token,
       );
 
@@ -108,11 +112,14 @@ class FileManagerBloc extends IFileManagerBloc {
     if (files.isEmpty) return;
 
     try {
-      final result = files.where((element) {
+      currentFiles.clear();
+      final list = files.where((element) {
         return element.name.toLowerCase().contains(text.toLowerCase());
       }).toList();
 
-      emit(FileManagerSuccess(files: result));
+      currentFiles.addAll(list);
+
+      emit(FileManagerSuccess());
     } catch (e) {
       emit(FileManagerFailure(message: 'Erro ao carregar arquivos'));
     }
@@ -128,7 +135,10 @@ class FileManagerBloc extends IFileManagerBloc {
       );
 
       files.remove(file);
-      emit(FileManagerSuccess(result: result, files: files));
+
+      currentFiles.clear();
+      currentFiles.addAll(files);
+      emit(FileManagerSuccess(result: result));
     } catch (e) {
       emit(FileManagerFailure(message: 'Erro ao deletar arquivo'));
     }
@@ -144,7 +154,9 @@ class FileManagerBloc extends IFileManagerBloc {
         _ => files,
       };
 
-      emit(FileManagerSuccess(files: filterList));
+      currentFiles.clear();
+      currentFiles.addAll(filterList);
+      emit(FileManagerSuccess());
     } catch (_) {
       emit(FileManagerFailure(message: 'Erro ao mudar o tipo de arquivo'));
     }
