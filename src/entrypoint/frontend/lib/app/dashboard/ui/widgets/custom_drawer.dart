@@ -1,16 +1,147 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../../core/theme/mh_colors.dart';
+import '../../../login/ui/widgets/custom_text_form_field.dart';
+
+void _showEditProfileDialog(BuildContext context, String username, String email) {
+  final TextEditingController nameController = TextEditingController(text: username);
+  final TextEditingController emailController = TextEditingController(text: email);
+  final TextEditingController oldPasswordController = TextEditingController();
+  final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Editar perfil'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  // TODO: lógica para adicionar/alterar a foto de perfil
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 40,
+                      backgroundColor: Colors.grey[300],
+                      child: CachedNetworkImage(
+                        imageUrl: '',
+                        imageBuilder: (context, imageProvider) => CircleAvatar(
+                          radius: 40,
+                          backgroundImage: imageProvider,
+                        ),
+                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => const Icon(Icons.person, size: 40, color: Colors.white),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: CircleAvatar(
+                        backgroundColor: MHColors.blue,
+                        radius: 15,
+                        child: const Icon(
+                          Icons.edit,
+                          size: 15,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              CustomTextFormField(
+                labelText: 'Nome de usuário',
+                hintText: 'Digite o novo nome de usuário',
+                icon: Icons.person,
+                onChanged: (value) {},
+                controller: nameController,
+              ),
+              const SizedBox(height: 20),
+              CustomTextFormField(
+                labelText: 'E-mail',
+                hintText: 'E-mail',
+                icon: Icons.email,
+                onChanged: (value) {},
+                controller: emailController,
+                enabled: false,
+                backgroundColor: Colors.grey[300],
+              ),
+              const SizedBox(height: 20),
+              CustomTextFormField(
+                labelText: 'Senha antiga',
+                hintText: '',
+                icon: Icons.lock_outline,
+                onChanged: (value) {},
+                controller: oldPasswordController,
+                obscureText: true,
+              ),
+              const SizedBox(height: 20),
+              CustomTextFormField(
+                labelText: 'Nova senha',
+                hintText: '',
+                icon: Icons.lock_outline,
+                onChanged: (value) {},
+                controller: newPasswordController,
+                obscureText: true,
+              ),
+              const SizedBox(height: 20),
+              CustomTextFormField(
+                labelText: 'Confirme a nova senha',
+                hintText: '',
+                icon: Icons.lock_outline,
+                onChanged: (value) {},
+                controller: confirmPasswordController,
+                obscureText: true,
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancelar'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: MHColors.blue,
+            ),
+          ),
+          ElevatedButton(
+            child: const Text('Salvar'),
+            onPressed: () {
+              // TODO: Lógica para salvar as alterações feitas
+              Navigator.of(context).pop();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: MHColors.blue,
+              foregroundColor: Colors.white,
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({
     super.key,
     required this.username,
+    required this.email,
     required this.onTapLogout,
   });
 
   final String username;
+  final String email;
   final Function() onTapLogout;
 
   @override
@@ -61,10 +192,10 @@ class CustomDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Configurações'),
+            leading: const Icon(Icons.edit),
+            title: const Text('Editar informações do perfil'),
             onTap: () {
-              // TODO: Handle Configurações action
+              _showEditProfileDialog(context, username, email);
             },
           ),
           const Spacer(),

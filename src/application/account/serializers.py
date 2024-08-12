@@ -18,7 +18,12 @@ class AccountRegisterSerializer(serializers.ModelSerializer):
         )
 
         return account
+    
 
+class AccountUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ['username', 'email', 'profile_image', 'description', "password"]
 
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=155)
