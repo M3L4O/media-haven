@@ -63,26 +63,45 @@ flutter pub get
 flutter run
 ```
 
-## Backend (Django API)
-
-> `login/`: 
-recebe: {email: str, password:str},
-retorna: {acess_token: str, username: str}
-
-> `sign_up/`:
-recebe: {email: str, username:str, password:str},
-retorna: {acess_token: str, username: str}
-
-> `load_session/`:
-recebe: {token: str},
-retorna: {acess_token: str, username: str}
-
-> `logout/`:
-recebe: {acess_token:str}
-retorna: 200 ou 404
+## Backend (Django Restframework API)
 
 Link para a documentação completa da API:
 > https://documenter.getpostman.com/view/33062932/2sA3rxpsk4
+
+
+### Como executar as DRF APIs
+
+Primeiramente é necessário clonar o repositório da aplicação:
+
+```bash
+git clone https://github.com/M3L4O/media-haven.git
+```
+Em seguida, deve-se criar um ambiente virtual e instalar as dependências:
+
+```bash
+cd media-haven/src
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+Dessa forma é possível executar as duas APIs:
+
+(1) Servidor de aplicação:
+
+```bash
+cd application
+python manage.py makemigrations account file
+python manage.py migrate
+python manage.py runserver 0.0.0.0:8000
+```
+
+(2) Servidor de processamento de mídia:
+
+```bash
+cd media_processing
+python manage.py runserver 0.0.0.0:3000
+```
+
 
 ## Pessoas contribuidoras
 
