@@ -37,16 +37,20 @@ class LoginBloc extends ILoginBloc {
 
       final result = await repository.login(user: user);
 
-      final name = result.username;
       final token = result.access;
 
-      if (name != null) await sharedPreferences.setString('name', name);
-      if (token != null) await sharedPreferences.setString('token', token);
+      await Future.wait([
+        sharedPreferences.setString('email', email),
+        if (token != null) sharedPreferences.setString('token', token),
+      ]);
 
       emit(LoginSuccess(user: result));
     } catch (e) {
-      emit(LoginFailure(
-          message: 'Ocorreu um erro ao tentar fazer login na aplicaçāo.'));
+      emit(
+        LoginFailure(
+          message: 'Ocorreu um erro ao tentar fazer login na aplicaçāo.',
+        ),
+      );
     }
   }
 }
