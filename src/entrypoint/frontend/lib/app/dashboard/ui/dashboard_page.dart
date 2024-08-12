@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/helpers/custom_size.dart';
 import '../../../core/injection_container.dart';
@@ -37,6 +38,7 @@ class _DashboardState extends State<Dashboard> {
   late ILogoutBloc logoutBloc;
   late IFileManagerBloc fileManagerBloc;
   late IAudioPlayerBloc playerAudioBloc;
+  late SharedPreferences prefs;
   final List<bool> _selectedLayout = <bool>[true, false];
 
   @override
@@ -45,6 +47,7 @@ class _DashboardState extends State<Dashboard> {
     fileManagerBloc = sl.get<IFileManagerBloc>();
     fileManagerBloc.getFiles();
     playerAudioBloc = sl.get<IAudioPlayerBloc>();
+    prefs = sl.get<SharedPreferences>();
 
     super.initState();
   }
@@ -149,8 +152,7 @@ class _DashboardState extends State<Dashboard> {
               ],
             ),
             drawer: CustomDrawer(
-              username: 'user0921',
-              email:'user@gmail.com',
+              email: prefs.getString('email') ?? '',
               onTapLogout: () {
                 logoutBloc.logout();
               },
@@ -170,6 +172,12 @@ class _DashboardState extends State<Dashboard> {
                     bloc: fileManagerBloc,
                     builder: (context, state) {
                       final files = fileManagerBloc.currentFiles;
+
+                      if (state is FileManagerLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
 
                       return Padding(
                         padding: const EdgeInsets.all(16.0),

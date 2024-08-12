@@ -1,7 +1,7 @@
-import 'package:frontend/app/dashboard/data/models/video_model.dart';
-
+import '../../../../core/service/http_client.dart';
 import 'audio_model.dart';
 import 'image_model.dart';
+import 'video_model.dart';
 
 class FileBase {
   String file;
@@ -18,9 +18,7 @@ class FileBase {
       : file = json['file'],
         initialUrl = json['file'],
         id = json['id'] {
-    file = type != null
-        ? 'http://0.0.0.0:8000/file/$type/${json['id']}/'
-        : json['file'];
+    file = type != null ? '${baseUrl}file/$type/${json['id']}/' : json['file'];
   }
 
   String get name {

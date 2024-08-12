@@ -7,6 +7,7 @@ import '../../data/models/audio_model.dart';
 import '../../data/models/file_base.dart';
 import '../../data/models/image_model.dart';
 import '../../data/models/option.dart';
+import '../../data/models/video_model.dart';
 import '../bloc/upload_image/file_manager_bloc.dart';
 
 class PopupMenuOptions extends StatelessWidget {
@@ -133,17 +134,27 @@ class PopupMenuOptions extends StatelessWidget {
                 if (file.stereo != null && file.stereo!) const Text('Stereo'),
               ],
               if (file is ImageModel) ...[
-                Text('Arquivo: ${file.file}'), // File
-                Text('Tamanho do Arquivo: ${file.fileSize ?? ''}'), // File Size
-                Text('Data de Upload: ${file.uploadDate ?? ''}'), // Upload Date
-                Text('Tipo MIME: ${file.mIMEType ?? ''}'), // MIME Type
-                Text('Descrição: ${file.description ?? ''}'), // Description
-                Text('Largura: ${file.width ?? ''}'), // Width
-                Text('Altura: ${file.height ?? ''}'), // Height
-                Text(
-                    'Profundidade de Cor: ${file.colorDepth ?? ''}'), // Color Depth
-                Text('Conta: ${file.account ?? ''}'), // Account
-                Text('Nome: ${file.name}'), // Name
+                Text('Arquivo: ${file.file}'),
+                Text('Tamanho do Arquivo: ${file.fileSize ?? ''}'),
+                Text('Data de Upload: ${file.uploadDate ?? ''}'),
+                Text('Tipo MIME: ${file.mIMEType ?? ''}'),
+                Text('Descrição: ${file.description ?? ''}'),
+                Text('Largura: ${file.width ?? ''}'),
+                Text('Altura: ${file.height ?? ''}'),
+                Text('Profundidade de Cor: ${file.colorDepth ?? ''}'),
+                Text('Conta: ${file.account ?? ''}'),
+                Text('Nome: ${file.name}'),
+              ],
+              if (file is VideoModel) ...[
+                Text('Arquivo: ${file.file}'),
+                Text('Tamanho do Arquivo: ${file.fileSize}'),
+                Text('Data de Upload: ${file.uploadDate}'),
+                Text('Tipo MIME: ${file.mimeType}'),
+                Text('Descrição: ${file.description}'),
+                Text('Largura: ${file.width}'),
+                Text('Altura: ${file.height}'),
+                Text('Conta: ${file.account}'),
+                Text('Nome: ${file.name}'),
               ]
             ],
           ),

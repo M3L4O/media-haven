@@ -51,6 +51,7 @@ class RegisterBloc extends IRegisterBloc {
       );
 
       final access = token.access;
+      await sharedPreferences.setString('email', email);
       if (access != null) await sharedPreferences.setString('token', access);
 
       emit(RegisterSuccess(user: result));

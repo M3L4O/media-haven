@@ -57,9 +57,7 @@ class FileManagerBloc extends IFileManagerBloc {
 
       emit(FileManagerSuccess());
     } catch (e) {
-      emit(FileManagerFailure(
-        message: 'Erro ao carregar arquivos',
-      ));
+      emit(FileManagerFailure(message: 'Erro ao carregar arquivos'));
     }
   }
 
