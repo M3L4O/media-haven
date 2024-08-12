@@ -1,3 +1,5 @@
+import 'package:frontend/app/dashboard/data/models/video_model.dart';
+
 import 'audio_model.dart';
 import 'image_model.dart';
 
@@ -31,6 +33,7 @@ class FileBase {
     return switch (this) {
       AudioModel() => 'audios',
       ImageModel() => 'images',
+      VideoModel() => 'videos',
       _ => null,
     };
   }
