@@ -56,6 +56,7 @@ Future<void> initGlobalContainer() async {
     )
     ..registerSingleton<IRegisterBloc>(
       RegisterBloc(
+        loginRepository: sl<ILoginRepository>(),
         repository: sl<IRegisterRepository>(),
         sharedPreferences: sl<SharedPreferences>(),
       ),

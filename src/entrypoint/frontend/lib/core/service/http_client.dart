@@ -7,6 +7,8 @@ import 'package:http_parser/http_parser.dart' show MediaType;
 
 import '../../app/dashboard/data/models/file_params.dart';
 
+const baseUrl = 'http://3.91.142.34:8000/';
+
 abstract class IHttpClient {
   Future<Response> get(String url, String token);
   Future<Response> post(String url, Map<String, dynamic> body);
@@ -19,7 +21,6 @@ abstract class IHttpClient {
 
 class HttpClient implements IHttpClient {
   final client = Client();
-  final baseUrl = 'http://0.0.0.0:8000/';
 
   @override
   void logResponse(Response response, [Object? body]) {
@@ -84,7 +85,7 @@ class HttpClient implements IHttpClient {
     var request = http.MultipartRequest(
       'POST',
       Uri.parse(
-        '$baseUrl$file/${file.type}s/upload/',
+        '${baseUrl}file/${file.type}s/upload/',
       ),
     );
 

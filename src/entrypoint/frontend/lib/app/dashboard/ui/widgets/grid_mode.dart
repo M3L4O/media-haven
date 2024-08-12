@@ -82,6 +82,7 @@ class _GridModeState extends State<GridMode> {
                   ),
                   child: SizedBox(
                     height: 180,
+                    width: double.infinity,
                     child: Builder(
                       builder: (context) {
                         if (file is ImageModel) {

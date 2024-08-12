@@ -42,6 +42,7 @@ class FileManagerBloc extends IFileManagerBloc {
     try {
       final token = sharedPreferences.getString('token') ?? '';
 
+      files.clear();
       final images = await repository.getImages(token: token);
       final audios = await repository.getAudios(token: token);
       final videos = await repository.getVideos(token: token);
@@ -56,9 +57,7 @@ class FileManagerBloc extends IFileManagerBloc {
 
       emit(FileManagerSuccess());
     } catch (e) {
-      emit(FileManagerFailure(
-        message: 'Erro ao carregar arquivos',
-      ));
+      emit(FileManagerFailure(message: 'Erro ao carregar arquivos'));
     }
   }
 
@@ -74,12 +73,12 @@ class FileManagerBloc extends IFileManagerBloc {
 
       final token = sharedPreferences.getString('token') ?? '';
 
-      final result = await repository.uploadFile(
+      await repository.uploadFile(
         file: file,
         token: token,
       );
 
-      emit(FileManagerSuccess(result: result));
+      await getFiles();
     } catch (e) {
       emit(FileManagerFailure(message: 'Erro ao fazer upload do arquivo'));
     }

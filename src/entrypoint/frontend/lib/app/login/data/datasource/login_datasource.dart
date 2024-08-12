@@ -21,10 +21,14 @@ class LoginDatasource implements ILoginDatasource {
         'auth/login/',
         user.toJson(),
       );
-      
+
       log(result.body);
 
-      return result;
+      if (result.statusCode == 200) {
+        return result;
+      }
+
+      throw Exception();
     } catch (e) {
       rethrow;
     }

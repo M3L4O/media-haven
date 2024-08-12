@@ -1,16 +1,19 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../core/theme/mh_colors.dart';
 import '../../../login/ui/widgets/custom_text_form_field.dart';
 
-void _showEditProfileDialog(BuildContext context, String username, String email) {
-  final TextEditingController nameController = TextEditingController(text: username);
-  final TextEditingController emailController = TextEditingController(text: email);
-  final TextEditingController oldPasswordController = TextEditingController();
-  final TextEditingController newPasswordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+void _showEditProfileDialog(
+  BuildContext context,
+  String username,
+  String email,
+) {
+  final nameController = TextEditingController(text: username);
+  final emailController = TextEditingController(text: email);
+  final oldPasswordController = TextEditingController();
+  final newPasswordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   showDialog(
     context: context,
@@ -37,17 +40,21 @@ void _showEditProfileDialog(BuildContext context, String username, String email)
                           radius: 40,
                           backgroundImage: imageProvider,
                         ),
-                        placeholder: (context, url) => const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => const Icon(Icons.person, size: 40, color: Colors.white),
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => const Icon(
+                            Icons.person,
+                            size: 40,
+                            color: Colors.white),
                       ),
                     ),
-                    Positioned(
+                    const Positioned(
                       bottom: 0,
                       right: 0,
                       child: CircleAvatar(
                         backgroundColor: MHColors.blue,
                         radius: 15,
-                        child: const Icon(
+                        child: Icon(
                           Icons.edit,
                           size: 15,
                           color: Colors.white,
@@ -107,16 +114,15 @@ void _showEditProfileDialog(BuildContext context, String username, String email)
         ),
         actions: <Widget>[
           TextButton(
-            child: const Text('Cancelar'),
             onPressed: () {
               Navigator.of(context).pop();
             },
             style: TextButton.styleFrom(
               foregroundColor: MHColors.blue,
             ),
+            child: const Text('Cancelar'),
           ),
           ElevatedButton(
-            child: const Text('Salvar'),
             onPressed: () {
               // TODO: Lógica para salvar as alterações feitas
               Navigator.of(context).pop();
@@ -125,6 +131,7 @@ void _showEditProfileDialog(BuildContext context, String username, String email)
               backgroundColor: MHColors.blue,
               foregroundColor: Colors.white,
             ),
+            child: const Text('Salvar'),
           ),
         ],
       );
@@ -135,12 +142,10 @@ void _showEditProfileDialog(BuildContext context, String username, String email)
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({
     super.key,
-    required this.username,
     required this.email,
     required this.onTapLogout,
   });
 
-  final String username;
   final String email;
   final Function() onTapLogout;
 
@@ -184,20 +189,20 @@ class CustomDrawer extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Text(
-                    username,
+                    email,
                     style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ],
               ),
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.edit),
-            title: const Text('Editar informações do perfil'),
-            onTap: () {
-              _showEditProfileDialog(context, username, email);
-            },
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.edit),
+          //   title: const Text('Editar informações do perfil'),
+          //   onTap: () {
+          //     _showEditProfileDialog(context, email);
+          //   },
+          // ),
           const Spacer(),
           ListTile(
             leading: const Icon(Icons.exit_to_app),
