@@ -21,6 +21,7 @@ class ImageModel extends FileBase {
     this.account,
     required super.file,
     required super.id,
+    required super.initialUrl,
   });
 
   ImageModel.fromJson(super.json)

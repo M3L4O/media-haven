@@ -12,7 +12,7 @@ import 'audio_player_state.dart';
 abstract class IAudioPlayerBloc extends Cubit<PlayerAudioState> {
   IAudioPlayerBloc() : super(PlayerAudioState());
 
-  Future<void> setUrl({required String url, required int id});
+  Future<void> setUrl({required int id});
   Future<void> togglePlayButton();
 
   Future<void> stop();
@@ -83,19 +83,19 @@ class AudioPlayerBloc extends IAudioPlayerBloc {
   }
 
   @override
-  Future<void> setUrl({required String url, required int id}) async {
+  Future<void> setUrl({required int id}) async {
     listenDuration?.cancel();
     final token = sl.get<SharedPreferences>().getString('token');
 
     if (token == null) return emit(state.copyWith(error: 'Token not found'));
 
-    final newUrl = await _repository.getFileBytes(
+    final url = await _repository.getFileBytes(
       id: id.toString(),
       type: 'audios',
       token: token,
     );
 
-    await player.setAudioSource(BufferAudioSource(newUrl));
+    await player.setAudioSource(BufferAudioSource(url));
     listenDuration = await _listenDuration();
   }
 }

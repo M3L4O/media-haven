@@ -10,50 +10,41 @@ Future<dynamic> imageDialog(BuildContext context, ImageModel file) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {
-      return Dialog(
+      return Center(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  4.w,
-                  Text(
-                    file.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: MHColors.darkGray,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Column(
-                      children: [
-                        Icon(
-                          Icons.close,
-                          color: MHColors.gray,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+            20.h,
+            Text(
+              file.name,
+              style: const TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: MHColors.white,
               ),
             ),
-            SizedBox(
-              height: 400,
-              child: Align(
-                alignment: Alignment.center,
-                child: CustomImageNetwork(
+            20.h,
+            Stack(
+              children: [
+                CustomImageNetwork(
                   url: file.file,
+                  fit: BoxFit.contain,
                 ),
-                // Image.memory(),
-              ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Column(
+                    children: [
+                      Icon(
+                        Icons.close,
+                        color: MHColors.gray,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),

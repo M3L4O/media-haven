@@ -42,10 +42,12 @@ class FileManagerBloc extends IFileManagerBloc {
 
       final images = await repository.getImages(token: token);
       final audios = await repository.getAudios(token: token);
+      final videos = await repository.getVideos(token: token);
 
       files
         ..addAll(images)
-        ..addAll(audios);
+        ..addAll(audios)
+        ..addAll(videos);
 
       emit(FileManagerSuccess(files: files));
     } catch (e) {

@@ -23,6 +23,7 @@ class AudioModel extends FileBase {
     this.account,
     required super.file,
     required super.id,
+    required super.initialUrl,
   });
 
   AudioModel.fromJson(super.json)
@@ -52,12 +53,5 @@ class AudioModel extends FileBase {
     data['account'] = account;
 
     return data;
-  }
-
-  @override
-  String get name {
-    var uri = Uri.parse(file);
-    var pathSegments = uri.pathSegments;
-    return pathSegments.last;
   }
 }

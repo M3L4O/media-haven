@@ -101,7 +101,6 @@ Future<dynamic> videoDialog(
 }
 
 void _listener(VideoPlayerController controller, StateSetter setS) {
-  print('heere');
   if (controller.value.isCompleted) {
     setS(() {});
   }

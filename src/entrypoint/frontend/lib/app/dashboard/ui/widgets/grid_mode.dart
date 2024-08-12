@@ -9,6 +9,7 @@ import '../../../../core/theme/mh_colors.dart';
 import '../../data/models/audio_model.dart';
 import '../../data/models/file_base.dart';
 import '../../data/models/image_model.dart';
+import '../../data/models/video_model.dart';
 import '../bloc/player_audio/audio_player_bloc.dart';
 import '../bloc/upload_image/file_manager_bloc.dart';
 import 'audio_dialog.dart';
@@ -35,7 +36,7 @@ class _GridModeState extends State<GridMode> {
     return SliverGrid.builder(
       itemBuilder: (BuildContext context, int index) {
         final file = widget.files[index];
-
+    
         return SizedBox(
           height: double.infinity,
           child: Column(
@@ -58,14 +59,13 @@ class _GridModeState extends State<GridMode> {
                 onTap: () async {
                   if (file is AudioModel) {
                     _showLoadingDialog(context);
-                    await _audioPlayerBloc.setUrl(
-                      url: file.file,
-                      id: file.id,
-                    );
+                    await _audioPlayerBloc.setUrl(id: file.id);
                     if (!context.mounted) return;
                     Navigator.pop(context);
                     audioDialog(context, file);
                   } else if (file is ImageModel) {
+                    imageDialog(context, file);
+                  } else if (file is VideoModel) {
                     _showLoadingDialog(context);
                     final url = await _fileManager.getVideoUrlFromBlob(file.id);
                     if (!context.mounted) return;
@@ -97,7 +97,16 @@ class _GridModeState extends State<GridMode> {
                               color: MHColors.lightGreen.withOpacity(0.3),
                             ),
                           );
+                        } else if (file is VideoModel) {
+                          return Align(
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.ondemand_video_sharp,
+                              color: MHColors.mediumPurple.withOpacity(0.3),
+                            ),
+                          );
                         }
+
                         return const Center(
                           child: Text(
                             'Arquivo não suportado',

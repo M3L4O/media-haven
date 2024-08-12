@@ -10,5 +10,6 @@ class MHColors {
   static const Color black = Color(0xFF000000);
   static const Color lightGreen = Color(0xFF20B2AA);
   static const Color lightPurple = Color(0xFFC8A2C8);
+  static const Color mediumPurple = Color(0xFF9370DB);
   static const Color red = Color(0xFFEF4136);
 }
