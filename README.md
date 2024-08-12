@@ -81,6 +81,9 @@ retorna: {acess_token: str, username: str}
 recebe: {acess_token:str}
 retorna: 200 ou 404
 
+Link para a documentação completa da API:
+> https://documenter.getpostman.com/view/33062932/2sA3rxpsk4
+
 ## Pessoas contribuidoras
 
 | [<img loading="lazy" src="https://avatars.githubusercontent.com/u/57508736?v=4" width=115><br><sub> Jhoisnáyra Vitória </sub>](https://github.com/jhoisz) |  [<img loading="lazy" src="https://avatars.githubusercontent.com/u/83297541?v=4" width=115><br><sub> Joāo Victor Melo </sub>](https://github.com/M3L4O) |  [<img loading="lazy" src="https://avatars.githubusercontent.com/u/91147230?v=4" width=115><br><sub> Ícaro Gabryel </sub>](https://github.com/icarogabryel) | [<img loading="lazy" src="https://avatars.githubusercontent.com/u/103615867?v=4" width=115><br><sub> Ana Leticia </sub>](https://github.com/Let0210) | [<img loading="lazy" src="https://avatars.githubusercontent.com/u/67970167?v=4" width=115><br><sub> Wesley Vitor </sub>](https://github.com/wesleyvitor11000) |
