@@ -1,6 +1,7 @@
+import 'dart:html' as html;
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:frontend/app/dashboard/ui/widgets/select_type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/audio_model.dart';
@@ -8,6 +9,7 @@ import '../../../data/models/file_base.dart';
 import '../../../data/models/file_params.dart';
 import '../../../data/models/image_model.dart';
 import '../../../data/repository/file_manager_repository.dart';
+import '../../widgets/select_type.dart';
 import 'file_manager_state.dart';
 
 abstract class IFileManagerBloc extends Cubit<FileManagerState> {
@@ -18,6 +20,7 @@ abstract class IFileManagerBloc extends Cubit<FileManagerState> {
   Future<void> deleteFile(FileBase file);
   Future<void> searchFiles({required String text});
   Future<void> changeMediaType(TypeFile type);
+  Future<String> getVideoUrlFromBlob(int id);
 }
 
 class FileManagerBloc extends IFileManagerBloc {
@@ -141,5 +144,19 @@ class FileManagerBloc extends IFileManagerBloc {
     } catch (_) {
       emit(FileManagerFailure(message: 'Erro ao mudar o tipo de arquivo'));
     }
+  }
+
+  @override
+  Future<String> getVideoUrlFromBlob(int id) async {
+    final token = sharedPreferences.getString('token') ?? '';
+
+    final result = await repository.getFileBytes(
+      id: id.toString(),
+      type: 'videos',
+      token: token,
+    );
+
+    html.Blob videoBlob = html.Blob([result]);
+    return html.Url.createObjectUrlFromBlob(videoBlob);
   }
 }

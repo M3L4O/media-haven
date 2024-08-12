@@ -5,17 +5,14 @@ import '../../../../core/helpers/custom_size.dart';
 import '../../../../core/injection_container.dart';
 import '../../../../core/theme/mh_colors.dart';
 import '../../data/models/file_base.dart';
-import '../bloc/player_audio/audio_player_state.dart';
 import '../bloc/player_audio/audio_player_bloc.dart';
+import '../bloc/player_audio/audio_player_state.dart';
 
 Future<dynamic> audioDialog(
   BuildContext context,
   FileBase file,
 ) async {
   final audioPlayerBloc = sl.get<IAudioPlayerBloc>();
-  audioPlayerBloc.setUrl(
-      url:
-          'https://cdn.pixabay.com/download/audio/2023/06/11/audio_1777c08c36.mp3?filename=automobile-horn-153260.mp3');
 
   await showDialog(
     context: context,

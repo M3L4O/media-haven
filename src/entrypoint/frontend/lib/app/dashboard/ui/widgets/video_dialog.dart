@@ -2,17 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../core/theme/mh_colors.dart';
-import '../../data/models/image_model.dart';
 
 Future<dynamic> videoDialog(
   BuildContext context,
-  ImageModel file,
+  String url,
 ) async {
-  late VideoPlayerController controller = VideoPlayerController.networkUrl(
-    Uri.parse(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
-    ),
-  );
+  final controller = VideoPlayerController.networkUrl(Uri.parse(url));
 
   bool hasListen = false;
   ValueNotifier<bool> isMouseOver = ValueNotifier(false);

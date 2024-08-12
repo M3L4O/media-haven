@@ -1,14 +1,18 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../../core/injection_container.dart';
+import '../../../data/repository/file_manager_repository.dart';
+import '../../widgets/grid_mode.dart';
 import 'audio_player_state.dart';
 
 abstract class IAudioPlayerBloc extends Cubit<PlayerAudioState> {
   IAudioPlayerBloc() : super(PlayerAudioState());
 
-  Future<void> setUrl({required String url});
+  Future<void> setUrl({required String url, required int id});
   Future<void> togglePlayButton();
 
   Future<void> stop();
@@ -16,6 +20,7 @@ abstract class IAudioPlayerBloc extends Cubit<PlayerAudioState> {
 
 class AudioPlayerBloc extends IAudioPlayerBloc {
   final player = AudioPlayer();
+  final _repository = sl.get<IFileManagerRepository>();
   StreamSubscription<Duration>? listenDuration;
 
   @override
@@ -23,25 +28,19 @@ class AudioPlayerBloc extends IAudioPlayerBloc {
     emit(state.copyWith(isLoading: true));
 
     try {
-      if (player.state == PlayerState.paused) {
-        emit(state.copyWith(isPlaying: true, isPaused: false));
-        await player.resume();
-        print('resumed');
-        return;
-      } else if (player.state == PlayerState.playing) {
-        emit(state.copyWith(isPlaying: false, isPaused: true));
+      if (state.isPlaying) {
         await player.pause();
-        print('paused');
+        emit(state.copyWith(isPlaying: false, isPaused: true));
         return;
+      }
+
+      if (player.duration == player.position) {
+        await player.seek(Duration.zero);
+        await player.stop();
       }
 
       emit(state.copyWith(isPlaying: true, isPaused: false));
-
-      final source = player.source;
-      if (source != null) {
-        player.play(source);
-        print('played');
-      }
+      await player.play();
     } catch (e) {
       emit(state.copyWith(error: e.toString()));
     }
@@ -54,27 +53,49 @@ class AudioPlayerBloc extends IAudioPlayerBloc {
   }
 
   Future<StreamSubscription<Duration>> _listenDuration() async {
-    final audioDuration = await player.getDuration();
-    return player.onPositionChanged.listen((event) {
-      print(event);
-      print(audioDuration);
-      emit(
-        state.copyWith(
-          position: event,
-          duration: audioDuration,
-        ),
-      );
+    return player.positionStream.listen((event) {
+      emit(state.copyWith(position: event, duration: player.duration));
 
-      if (audioDuration == event) {
-        emit(state.copyWith(isPlaying: false));
+      if (player.duration == event) {
+        emit(state.copyWith(isPlaying: false, isPaused: false));
+      } else if (!state.isPlaying &&
+          !state.isPaused &&
+          event != Duration.zero) {
+        emit(state.copyWith(isPlaying: true));
       }
     });
+
+    // final audioDuration = await player.getDuration();
+    // return player.onPositionChanged.listen((event) {
+    //   print(event);
+    //   print(audioDuration);
+    //   emit(
+    //     state.copyWith(
+    //       position: event,
+    //       duration: audioDuration,
+    //     ),
+    //   );
+
+    //   if (audioDuration == event) {
+    //     emit(state.copyWith(isPlaying: false));
+    //   }
+    // });
   }
 
   @override
-  Future<void> setUrl({required String url}) async {
+  Future<void> setUrl({required String url, required int id}) async {
     listenDuration?.cancel();
-    await player.setSourceUrl(url);
+    final token = sl.get<SharedPreferences>().getString('token');
+
+    if (token == null) return emit(state.copyWith(error: 'Token not found'));
+
+    final newUrl = await _repository.getFileBytes(
+      id: id.toString(),
+      type: 'audios',
+      token: token,
+    );
+
+    await player.setAudioSource(BufferAudioSource(newUrl));
     listenDuration = await _listenDuration();
   }
 }

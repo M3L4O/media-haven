@@ -1,7 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/helpers/custom_size.dart';
+import '../../../../core/injection_container.dart';
 import '../../../../core/theme/mh_colors.dart';
 import '../../data/models/image_model.dart';
 
@@ -48,14 +49,8 @@ Future<dynamic> imageDialog(BuildContext context, ImageModel file) {
               height: 400,
               child: Align(
                 alignment: Alignment.center,
-                child: CachedNetworkImage(
-                  imageUrl: file.file,
-                  errorWidget: (context, url, error) => const Center(
-                    child: Icon(
-                      Icons.error,
-                      color: MHColors.lightGray,
-                    ),
-                  ),
+                child: CustomImageNetwork(
+                  url: file.file,
                 ),
                 // Image.memory(),
               ),
@@ -65,4 +60,30 @@ Future<dynamic> imageDialog(BuildContext context, ImageModel file) {
       );
     },
   );
+}
+
+class CustomImageNetwork extends StatelessWidget {
+  const CustomImageNetwork({
+    super.key,
+    required this.url,
+    this.fit,
+  });
+
+  final String url;
+  final BoxFit? fit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) {
+        final token = sl.get<SharedPreferences>().getString('token');
+
+        return Image.network(
+          url,
+          headers: {"Authorization": "JWT $token"},
+          fit: fit ?? BoxFit.contain,
+        );
+      },
+    );
+  }
 }

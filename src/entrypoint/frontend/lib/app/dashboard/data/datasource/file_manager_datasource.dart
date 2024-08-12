@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:http/http.dart';
 
 import '../../../../core/service/http_client.dart';
@@ -11,6 +13,11 @@ abstract class IFileManagerDatasource {
   Future<Response> getAudios({required String token});
   Future<String> uploadFile({required FileParams file, required String token});
   Future<String> deleteFile({required FileBase file, required String token});
+  Future<Uint8List> getFileBytes({
+    required String id,
+    required String type,
+    required String token,
+  });
 }
 
 class FileManagerDatasource implements IFileManagerDatasource {
@@ -85,5 +92,24 @@ class FileManagerDatasource implements IFileManagerDatasource {
       type = 'images';
     }
     return type;
+  }
+
+  @override
+  Future<Uint8List> getFileBytes({
+    required String id,
+    required String type,
+    required String token,
+  }) async {
+    try {
+      final response = await http.get('file/$type/$id/', token);
+      if (response.statusCode == 200) {
+        return response.bodyBytes;
+      } else {
+        throw Exception('Falha ao buscar arquivo.');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Falha ao buscar arquivo.');
+    }
   }
 }

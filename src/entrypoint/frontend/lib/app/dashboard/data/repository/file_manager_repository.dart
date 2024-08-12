@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import '../datasource/file_manager_datasource.dart';
 import '../models/audio_model.dart';
@@ -11,6 +12,11 @@ abstract class IFileManagerRepository {
   Future<List<AudioModel>> getAudios({required String token});
   Future<String> uploadFile({required FileParams file, required String token});
   Future<String> deleteFile({required FileBase file, required String token});
+  Future<Uint8List> getFileBytes({
+    required String id,
+    required String type,
+    required String token,
+  });
 }
 
 class FileManagerRepository implements IFileManagerRepository {
@@ -79,6 +85,23 @@ class FileManagerRepository implements IFileManagerRepository {
       );
 
       return deleteResponse;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Uint8List> getFileBytes({
+    required String id,
+    required String type,
+    required String token,
+  }) async {
+    try {
+      return datasource.getFileBytes(
+        id: id,
+        type: type,
+        token: token,
+      );
     } catch (e) {
       rethrow;
     }
