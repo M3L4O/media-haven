@@ -22,5 +22,4 @@ urlpatterns = [
     path("videos/", VideoListView.as_view(), name="list-videos"),
     path("videos/<int:id>/", VideoDetailView.as_view(), name="detail-videos"),
     path("videos/upload/", VideoUploadView.as_view(), name="videos-upload"),
-    
 ]

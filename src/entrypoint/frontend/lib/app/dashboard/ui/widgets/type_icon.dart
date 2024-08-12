@@ -4,6 +4,7 @@ import '../../../../core/theme/mh_colors.dart';
 import '../../data/models/audio_model.dart';
 import '../../data/models/file_base.dart';
 import '../../data/models/image_model.dart';
+import '../../data/models/video_model.dart';
 
 class TypeIcon extends StatelessWidget {
   final FileBase file;
@@ -20,6 +21,10 @@ class TypeIcon extends StatelessWidget {
       ImageModel() => const Icon(
           Icons.image,
           color: MHColors.lightPurple,
+        ),
+      VideoModel() => const Icon(
+          Icons.ondemand_video_sharp,
+          color: MHColors.mediumPurple,
         ),
       _ => const Icon(
           Icons.error,

@@ -1,6 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../core/helpers/custom_size.dart';
+import '../../../../core/injection_container.dart';
 import '../../../../core/theme/mh_colors.dart';
 import '../../data/models/image_model.dart';
 
@@ -8,45 +10,71 @@ Future<dynamic> imageDialog(BuildContext context, ImageModel file) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {
-      return Dialog(
+      return Center(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Column(
-                  children: [
-                    Icon(
-                      Icons.close,
-                      color: MHColors.gray,
-                    ),
-                  ],
-                ),
+            20.h,
+            Text(
+              file.name,
+              style: const TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: MHColors.white,
               ),
             ),
-            SizedBox(
-              height: 400,
-              child: Align(
-                alignment: Alignment.center,
-                child: CachedNetworkImage(
-                  imageUrl: file.file,
-                  errorWidget: (context, url, error) => const Center(
-                    child: Icon(
-                      Icons.error,
-                      color: MHColors.lightGray,
-                    ),
+            20.h,
+            Stack(
+              children: [
+                CustomImageNetwork(
+                  url: file.file,
+                  fit: BoxFit.contain,
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Column(
+                    children: [
+                      Icon(
+                        Icons.close,
+                        color: MHColors.gray,
+                      ),
+                    ],
                   ),
                 ),
-              ),
+              ],
             ),
           ],
         ),
       );
     },
   );
+}
+
+class CustomImageNetwork extends StatelessWidget {
+  const CustomImageNetwork({
+    super.key,
+    required this.url,
+    this.fit,
+  });
+
+  final String url;
+  final BoxFit? fit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) {
+        final token = sl.get<SharedPreferences>().getString('token');
+
+        return Image.network(
+          url,
+          headers: {"Authorization": "JWT $token"},
+          fit: fit ?? BoxFit.contain,
+        );
+      },
+    );
+  }
 }

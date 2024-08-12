@@ -1,7 +1,7 @@
 import 'file_base.dart';
 
 class ImageModel extends FileBase {
-  int? fileSize;
+  double? fileSize;
   String? uploadDate;
   String? mIMEType;
   String? description;
@@ -21,6 +21,7 @@ class ImageModel extends FileBase {
     this.account,
     required super.file,
     required super.id,
+    required super.initialUrl,
   });
 
   ImageModel.fromJson(super.json)

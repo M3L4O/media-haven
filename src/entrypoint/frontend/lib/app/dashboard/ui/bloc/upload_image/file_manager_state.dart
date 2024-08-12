@@ -1,4 +1,4 @@
-import '../../../data/models/file_base.dart';
+
 
 abstract class FileManagerState {}
 
@@ -8,12 +8,8 @@ class FileManagerLoading extends FileManagerState {}
 
 class FileManagerSuccess extends FileManagerState {
   final String? result;
-  final List<FileBase>? files;
 
-  FileManagerSuccess({
-    this.result,
-    this.files,
-  });
+  FileManagerSuccess({this.result});
 }
 
 class FileManagerFailure extends FileManagerState {

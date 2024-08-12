@@ -83,7 +83,7 @@ class ImageDetailView(RetrieveUpdateDestroyAPIView):
             for k, v in data.items():
                 if k in self.keys_allowed:
                     image.__setattr__(k, v)
-                
+             
             image.save(force_update=True)
             return Response(status=status.HTTP_200_OK)
         else:
@@ -204,6 +204,7 @@ class VideoUploadView(GenericAPIView):
 class VideoDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = VideoSerializer
+
     keys_allowed = (
         "name",
         "description",
@@ -245,10 +246,11 @@ class VideoDetailView(RetrieveUpdateDestroyAPIView):
                     continue
                 if k in self.keys_allowed:
                     video.__setattr__(k, v)
-                
+           
             video.save(force_update=True)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
 
         if "versions" in data.keys():
             versions = json.loads(data["versions"])

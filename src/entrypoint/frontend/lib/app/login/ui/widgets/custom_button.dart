@@ -19,7 +19,7 @@ class CustomButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(24),
       child: Ink(
         height: 45,
-        width: double.infinity,
+        width: 300,
         decoration: BoxDecoration(
           color: MHColors.blue,
           borderRadius: BorderRadius.circular(24),
