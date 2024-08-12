@@ -23,6 +23,7 @@ class Genre(models.Model):
 
 class File(models.Model):
     id = models.BigAutoField(primary_key=True, editable=False)
+    name = models.CharField(max_length=255)
     file = models.FileField()
     file_size = models.FloatField()
     upload_date = models.DateField(auto_now_add=True)
@@ -68,7 +69,7 @@ class Video(File):
     bitrate = models.IntegerField(null=True)
     thumbnail = models.FileField(null=True)
     genre = models.ManyToManyField(Genre)
-    original_video = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='versions')
+    original_video = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='versions')
 
 
 class Audio(File):

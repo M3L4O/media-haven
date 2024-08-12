@@ -54,11 +54,12 @@ class ImageUploadSerializer(serializers.ModelSerializer):
         file.file.close()
         user_images_path = f"{settings.MEDIA_ROOT}{user.id}/images"
         os.makedirs(user_images_path, exist_ok=True)
-        file_path = os.path.abspath(f"{user_images_path}/{file._name}").replace(" ", "")
+        file_path = os.path.abspath(f"{user_images_path}/{file._name}")
         url = f"{settings.PROCESSOR_URL}/images/"
 
         image = Image.objects.create(
             file=file_path,
+            name=os.path.splitext(file._name)[0],
             file_size=file_size,
             MIME_type=MIME_type,
             description="",
@@ -110,11 +111,12 @@ class AudioUploadSerializer(serializers.ModelSerializer):
         file.file.close()
         user_audio_path = f"{settings.MEDIA_ROOT}{user.id}/audios"
         os.makedirs(user_audio_path, exist_ok=True)
-        file_path = os.path.abspath(f"{user_audio_path}/{file._name}").replace(" ", "")
+        file_path = os.path.abspath(f"{user_audio_path}/{file._name}")
         url = f"{settings.PROCESSOR_URL}/audios/"
 
         audio = Audio.objects.create(
             file=file_path,
+            name=os.path.splitext(file._name)[0],
             file_size=file_size,
             MIME_type=MIME_type,
             description="",
@@ -166,11 +168,12 @@ class VideoUploadSerializer(serializers.ModelSerializer):
         file.file.close()
         user_video_path = f"{settings.MEDIA_ROOT}{user.id}/videos"
         os.makedirs(user_video_path, exist_ok=True)
-        file_path = os.path.abspath(f"{user_video_path}/{file._name}").replace(" ", "")
+        file_path = os.path.abspath(f"{user_video_path}/{file._name}")
         url = f"{settings.PROCESSOR_URL}/videos/"
 
         video = Video.objects.create(
             file=file_path,
+            name=os.path.splitext(file._name)[0],
             file_size=file_size,
             MIME_type=MIME_type,
             description="",

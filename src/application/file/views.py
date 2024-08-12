@@ -51,7 +51,16 @@ class ImageListView(ListAPIView):
 class ImageDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ImageSerializer
-
+    keys_allowed = (
+        "name", 
+        "description", 
+        "MIME_type", 
+        "width", 
+        "height", 
+        "color_depth", 
+        "thumbnail",
+    )
+        
     def get_object(self, id):
         try:
             return Image.objects.get(pk=id)
@@ -71,10 +80,10 @@ class ImageDetailView(RetrieveUpdateDestroyAPIView):
         image = self.get_object(id)
         data = request.data
         if image is not None:
-            image.width = data["width"]
-            image.height = data["height"]
-            image.color_depth = data["color_depth"]
-            image.thumbnail = data["thumbnail"]
+            for k, v in data.items():
+                if k in self.keys_allowed:
+                    image.__setattr__(k, v)
+                
             image.save(force_update=True)
             return Response(status=status.HTTP_200_OK)
         else:
@@ -118,6 +127,15 @@ class AudioListView(ListAPIView):
 class AudioDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = AudioSerializer
+    keys_allowed = (
+        "name",
+        "description",
+        "MIME_type",
+        "duration",
+        "bitrate",
+        "sampling_rate",
+        "stereo",
+    )
 
     def get_object(self, id):
         try:
@@ -139,10 +157,10 @@ class AudioDetailView(RetrieveUpdateDestroyAPIView):
         data = request.data
 
         if audio is not None:
-            audio.sampling_rate = data["sample_rate"]
-            audio.bitrate = float(data["bitrate"])
-            audio.duration = data["duration"]
-            audio.stereo = int(data["channels"]) > 1
+            for k, v in data.items():
+                if k in self.keys_allowed:
+                    audio.__setattr__(k, v)
+            
             audio.save(force_update=True)
             return Response(status=status.HTTP_200_OK)
         else:
@@ -186,7 +204,19 @@ class VideoUploadView(GenericAPIView):
 class VideoDetailView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = VideoSerializer
-
+    keys_allowed = (
+        "name",
+        "description",
+        "MIME_type",
+        "duration",
+        "width",
+        "height",
+        "video_codec",
+        "frame_rate",
+        "bitrate",
+        "thumbnail",
+    )
+    
     def get_object(self, id):
         try:
             return Video.objects.get(id=id)
@@ -197,39 +227,40 @@ class VideoDetailView(RetrieveUpdateDestroyAPIView):
         id = self.kwargs.get("id")
         video = self.get_object(id)
         if video is not None:
-            return FileResponse(open(video.file.name, "rb"), as_attachment=True)
+            response = FileResponse(open(video.file.name, "rb"))
+            response["versions"] = {v.height: v.id for v in Video.objects.filter(original_video=video)}
+            return response
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, *args, **kwargs):
         id = self.kwargs.get("id")
+        video = self.get_object(id)
 
         data = request.data
 
-        versions = json.loads(data["versions"])
-
-        video = self.get_object(id)
-
         if video is not None:
-            video.duration = data["duration"]
-            video.width = data["width"]
-            video.height = data["height"]
-            video.video_codec = data["video_codec"]
-            video.frame_rate = data["frame_rate"]
-            video.bitrate = data["bitrate"]
-            video.thumbnail = data["thumbnail"]
+            for k, v in data.items():
+                if k == "versions":
+                    continue
+                if k in self.keys_allowed:
+                    video.__setattr__(k, v)
+                
             video.save(force_update=True)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        for v in versions:
-            v["MIME_type"] = video.MIME_type
-            v["file_size"] = video.file_size
-            v["description"] = video.description
-            v["account"] = video.account
-            v["original_video"] = video
+        if "versions" in data.keys():
+            versions = json.loads(data["versions"])
+        
+            for v in versions:
+                v["MIME_type"] = video.MIME_type
+                v["file_size"] = video.file_size
+                v["description"] = video.description
+                v["account"] = video.account
+                v["original_video"] = video
 
-            video = Video.objects.create(**v)
+                Video.objects.create(**v)
 
         return Response(status=status.HTTP_200_OK)
 
