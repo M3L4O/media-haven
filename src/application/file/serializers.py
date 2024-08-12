@@ -8,10 +8,7 @@ from threading import Thread
 from .models import Audio, Image, Video
 
 
-def save_file(bytes_array, file_path, url, id, token):
-    with open(file_path, "wb") as binary_file:
-        binary_file.write(bytes_array)
-
+def process_file(file_path, url, id, token):
     rq.post(url, data={"file": file_path, "file_id": id, "access": token})
 
 
@@ -65,9 +62,12 @@ class ImageUploadSerializer(serializers.ModelSerializer):
             description="",
             account=user,
         )
+        
+        with open(file_path, "wb") as binary_file:
+            binary_file.write(bytes_img)
 
         Thread(
-            target=save_file, args=[bytes_img, file_path, url, image.id, token]
+            target=process_file, args=[file_path, url, image.id, token]
         ).start()
 
         return image
@@ -122,9 +122,12 @@ class AudioUploadSerializer(serializers.ModelSerializer):
             description="",
             account=user,
         )
+        
+        with open(file_path, "wb") as binary_file:
+            binary_file.write(bytes_audio)
 
         Thread(
-            target=save_file, args=[bytes_audio, file_path, url, audio.id, token]
+            target=process_file, args=[file_path, url, audio.id, token]
         ).start()
 
         return audio
@@ -164,7 +167,7 @@ class VideoUploadSerializer(serializers.ModelSerializer):
         file = validated_data.get("file")
         MIME_type = file.content_type
         file_size = file.size
-        bytes_audio = file.file.read()
+        bytes_video = file.file.read()
         file.file.close()
         user_video_path = f"{settings.MEDIA_ROOT}{user.id}/videos"
         os.makedirs(user_video_path, exist_ok=True)
@@ -179,9 +182,12 @@ class VideoUploadSerializer(serializers.ModelSerializer):
             description="",
             account=user,
         )
+        
+        with open(file_path, "wb") as binary_file:
+            binary_file.write(bytes_video)
 
         Thread(
-            target=save_file, args=[bytes_audio, file_path, url, video.id, token]
+            target=process_file, args=[file_path, url, video.id, token]
         ).start()
 
         return video
