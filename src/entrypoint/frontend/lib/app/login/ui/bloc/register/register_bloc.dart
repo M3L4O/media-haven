@@ -41,7 +41,7 @@ class RegisterBloc extends IRegisterBloc {
       final result = await repository.register(user: user);
 
       final nameResult = result.username;
-      final token = result.accessToken;
+      final token = result.access;
 
       if (nameResult != null && token != null) {
         await sharedPreferences.setString('token', token);

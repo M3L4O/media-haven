@@ -21,36 +21,42 @@ class MessageComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Lottie.asset(
-            animationPath,
-            width: size,
-          ),
-          24.h,
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              message,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(color: MHColors.darkGray),
-              textAlign: TextAlign.center,
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Lottie.asset(
+                  animationPath,
+                  width: size,
+                ),
+                24.h,
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    message,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(color: MHColors.darkGray),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                24.h,
+                if (onTap != null)
+                  CustomButton(
+                    text: '',
+                    onTap: onTap!,
+                  ),
+              ],
             ),
           ),
-          24.h,
-          if (onTap != null)
-            CustomButton(
-              text: '',
-              onTap: onTap!,
-            ),
-          (MediaQuery.of(context).size.height * 0.18).h,
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
