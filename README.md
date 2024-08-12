@@ -47,6 +47,14 @@ Algumas bilbiotecas também foram utilizadas:
 
 > `cached_network_image`: Biblioteca utilizada para carregar e armazenar em cache imagens da internet.
 
+> `pillow`: Biblioteca utilizada para processamento e extração de dados de imagens.
+
+> `tinyTag`: Biblioteca utilizada para extração de dados dos arquivos de áudio.
+
+> `moviepy`: Biblioteca utilizada para processamento de videos.
+
+> `get-video-properties`: Biblioteca utilizada para extração das propriedades de videos.
+
 ### Como executar no Flutter
 
 Primeiro você deve [instalar flutter](https://docs.flutter.dev/get-started/install). Então, você pode clonar e entrar na pasta do projeto:
