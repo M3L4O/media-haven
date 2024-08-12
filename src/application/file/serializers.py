@@ -50,11 +50,13 @@ class ImageUploadSerializer(serializers.ModelSerializer):
         file = validated_data.get("file")
         MIME_type = file.content_type
         file_size = file.size
+
         bytes_img = file.file.read()
         file.file.close()
         user_images_path = f"{settings.MEDIA_ROOT}{user.id}/images"
         os.makedirs(user_images_path, exist_ok=True)
         file_path = os.path.abspath(f"{user_images_path}/{file._name}")
+        
         url = f"{settings.PROCESSOR_URL}/images/"
 
         image = Image.objects.create(
@@ -65,6 +67,11 @@ class ImageUploadSerializer(serializers.ModelSerializer):
             description="",
             account=user,
         )
+        
+        Thread(target=save_file, args=[bytes_img, file_path, url, image.id, token]).start()
+
+        return image
+
 
         Thread(
             target=save_file, args=[bytes_img, file_path, url, image.id, token]
@@ -94,6 +101,7 @@ class AudioUploadSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         file = attrs.get("file")
+
         content_type = file.content_type
         if content_type not in self.allowed_content_type:
             raise UnsupportedMediaType("Tipo de mídia não suportado.")
@@ -159,11 +167,13 @@ class VideoUploadSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = self.context["request"].user
+
         token = self.context["request"].META.get("HTTP_AUTHORIZATION")
 
         file = validated_data.get("file")
         MIME_type = file.content_type
         file_size = file.size
+
         bytes_audio = file.file.read()
         file.file.close()
         user_video_path = f"{settings.MEDIA_ROOT}{user.id}/videos"
@@ -179,6 +189,7 @@ class VideoUploadSerializer(serializers.ModelSerializer):
             description="",
             account=user,
         )
+
 
         Thread(
             target=save_file, args=[bytes_audio, file_path, url, video.id, token]

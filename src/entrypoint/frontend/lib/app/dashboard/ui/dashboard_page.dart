@@ -7,6 +7,7 @@ import '../../../core/theme/mh_colors.dart';
 import '../../login/ui/bloc/logout/logout_bloc.dart';
 import '../../login/ui/bloc/logout/logout_state.dart';
 import '../../login/ui/login_page.dart';
+import 'bloc/player_audio/audio_player_bloc.dart';
 import 'bloc/upload_image/file_manager_bloc.dart';
 import 'bloc/upload_image/file_manager_state.dart';
 import 'widgets/custom_drawer.dart';
@@ -35,6 +36,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   late ILogoutBloc logoutBloc;
   late IFileManagerBloc fileManagerBloc;
+  late IAudioPlayerBloc playerAudioBloc;
   final List<bool> _selectedLayout = <bool>[true, false];
 
   @override
@@ -42,7 +44,16 @@ class _DashboardState extends State<Dashboard> {
     logoutBloc = sl.get<ILogoutBloc>();
     fileManagerBloc = sl.get<IFileManagerBloc>();
     fileManagerBloc.getFiles();
+    playerAudioBloc = sl.get<IAudioPlayerBloc>();
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    playerAudioBloc.stop();
+    playerAudioBloc.close();
+    super.dispose();
   }
 
   @override
@@ -158,27 +169,20 @@ class _DashboardState extends State<Dashboard> {
                   child: BlocBuilder(
                     bloc: fileManagerBloc,
                     builder: (context, state) {
-                      if (state is FileManagerSuccess) {
-                        final files = state.files;
+                      final files = fileManagerBloc.currentFiles;
 
-                        return Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: files != null && files.isNotEmpty
-                              ? MediaContent(
-                                  files: files,
-                                  isGrid: _selectedLayout[0],
-                                )
-                              : const MessageComponent(
-                                  animationPath:
-                                      'assets/animations/empty_animation.json',
-                                  message: 'Nenhuma mídia encontrada',
-                                ),
-                        );
-                      }
-
-                      return const MessageComponent(
-                        animationPath: 'assets/animations/empty_animation.json',
-                        message: 'Nenhuma mídia encontrada',
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: files.isNotEmpty
+                            ? MediaContent(
+                                files: files,
+                                isGrid: _selectedLayout[0],
+                              )
+                            : const MessageComponent(
+                                animationPath:
+                                    'assets/animations/empty_animation.json',
+                                message: 'Nenhuma mídia encontrada',
+                              ),
                       );
                     },
                   ),

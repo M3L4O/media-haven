@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../app/dashboard/data/datasource/file_manager_datasource.dart';
 import '../app/dashboard/data/repository/file_manager_repository.dart';
-import '../app/dashboard/ui/bloc/player_audio/player_bloc.dart';
+import '../app/dashboard/ui/bloc/player_audio/audio_player_bloc.dart';
 import '../app/dashboard/ui/bloc/upload_image/file_manager_bloc.dart';
 import '../app/login/data/datasource/login_datasource.dart';
 import '../app/login/data/datasource/logout_datasource.dart';
@@ -92,7 +92,7 @@ Future<void> initGlobalContainer() async {
         sharedPreferences: sl<SharedPreferences>(),
       ),
     )
-    ..registerSingleton<IPlayerAudioBloc>(
-      PlayerAudioBloc(),
+    ..registerSingleton<IAudioPlayerBloc>(
+      AudioPlayerBloc(),
     );
 }

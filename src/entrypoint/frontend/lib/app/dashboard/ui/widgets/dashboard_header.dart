@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/helpers/custom_size.dart';
 import '../../../../core/theme/mh_colors.dart';
 import '../../../login/ui/widgets/custom_text_form_field.dart';
-import 'media_content.dart';
+import 'select_type.dart';
 
 class DashboardHeader extends StatefulWidget {
   final Function(TypeFile) onTypeChanged;

@@ -1,3 +1,5 @@
+import 'dart:html' as html;
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,18 +8,21 @@ import '../../../data/models/audio_model.dart';
 import '../../../data/models/file_base.dart';
 import '../../../data/models/file_params.dart';
 import '../../../data/models/image_model.dart';
+import '../../../data/models/video_model.dart';
 import '../../../data/repository/file_manager_repository.dart';
-import '../../widgets/media_content.dart';
+import '../../widgets/select_type.dart';
 import 'file_manager_state.dart';
 
 abstract class IFileManagerBloc extends Cubit<FileManagerState> {
   IFileManagerBloc() : super(FileManagerInitial());
+  final List<FileBase> currentFiles = [];
 
   Future<void> getFiles();
   Future<void> uploadFile();
   Future<void> deleteFile(FileBase file);
   Future<void> searchFiles({required String text});
   Future<void> changeMediaType(TypeFile type);
+  Future<String> getVideoUrlFromBlob(int id);
 }
 
 class FileManagerBloc extends IFileManagerBloc {
@@ -39,12 +44,17 @@ class FileManagerBloc extends IFileManagerBloc {
 
       final images = await repository.getImages(token: token);
       final audios = await repository.getAudios(token: token);
+      final videos = await repository.getVideos(token: token);
 
       files
         ..addAll(images)
-        ..addAll(audios);
+        ..addAll(audios)
+        ..addAll(videos);
 
-      emit(FileManagerSuccess(files: files));
+      currentFiles.clear();
+      currentFiles.addAll(files);
+
+      emit(FileManagerSuccess());
     } catch (e) {
       emit(FileManagerFailure(
         message: 'Erro ao carregar arquivos',
@@ -54,18 +64,18 @@ class FileManagerBloc extends IFileManagerBloc {
 
   @override
   Future<void> uploadFile() async {
-    emit(FileManagerLoading());
     try {
       final file = await getFile();
 
       if (file == null) {
         emit(FileManagerFailure(message: 'Erro ao selecionar arquivo'));
+        return;
       }
 
       final token = sharedPreferences.getString('token') ?? '';
 
       final result = await repository.uploadFile(
-        file: file!,
+        file: file,
         token: token,
       );
 
@@ -102,11 +112,14 @@ class FileManagerBloc extends IFileManagerBloc {
     if (files.isEmpty) return;
 
     try {
-      final result = files.where((element) {
+      currentFiles.clear();
+      final list = files.where((element) {
         return element.name.toLowerCase().contains(text.toLowerCase());
       }).toList();
 
-      emit(FileManagerSuccess(files: result));
+      currentFiles.addAll(list);
+
+      emit(FileManagerSuccess());
     } catch (e) {
       emit(FileManagerFailure(message: 'Erro ao carregar arquivos'));
     }
@@ -122,7 +135,10 @@ class FileManagerBloc extends IFileManagerBloc {
       );
 
       files.remove(file);
-      emit(FileManagerSuccess(result: result, files: files));
+
+      currentFiles.clear();
+      currentFiles.addAll(files);
+      emit(FileManagerSuccess(result: result));
     } catch (e) {
       emit(FileManagerFailure(message: 'Erro ao deletar arquivo'));
     }
@@ -134,12 +150,29 @@ class FileManagerBloc extends IFileManagerBloc {
       final filterList = switch (type) {
         TypeFile.audios => files.whereType<AudioModel>().toList(),
         TypeFile.fotosEImagens => files.whereType<ImageModel>().toList(),
+        TypeFile.videos => files.whereType<VideoModel>().toList(),
         _ => files,
       };
 
-      emit(FileManagerSuccess(files: filterList));
+      currentFiles.clear();
+      currentFiles.addAll(filterList);
+      emit(FileManagerSuccess());
     } catch (_) {
       emit(FileManagerFailure(message: 'Erro ao mudar o tipo de arquivo'));
     }
+  }
+
+  @override
+  Future<String> getVideoUrlFromBlob(int id) async {
+    final token = sharedPreferences.getString('token') ?? '';
+
+    final result = await repository.getFileBytes(
+      id: id.toString(),
+      type: 'videos',
+      token: token,
+    );
+
+    html.Blob videoBlob = html.Blob([result]);
+    return html.Url.createObjectUrlFromBlob(videoBlob);
   }
 }

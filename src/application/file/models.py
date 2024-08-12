@@ -69,6 +69,7 @@ class Video(File):
     bitrate = models.IntegerField(null=True)
     thumbnail = models.FileField(null=True)
     genre = models.ManyToManyField(Genre)
+
     original_video = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='versions')
 
 
