@@ -84,7 +84,7 @@ class HttpClient implements IHttpClient {
     var request = http.MultipartRequest(
       'POST',
       Uri.parse(
-        '$baseUrl$file/${file.type}s/upload/',
+        '$baseUrl/file/${file.type}s/upload/',
       ),
     );
 
